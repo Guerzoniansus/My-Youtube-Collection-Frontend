@@ -12,6 +12,7 @@ import { HomePageComponent } from './home/home-page/home-page.component';
 import { LoginComponent } from './login/login.component';
 import {HttpClientModule} from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
+import {GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
 
 @NgModule({
   declarations: [
@@ -28,9 +29,28 @@ import { AppRoutingModule } from './app-routing.module';
     MatButtonModule,
     MatMenuModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    GoogleSigninButtonModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '1016912375337-7uhg06jqloqokfbh3fu5c86eqoj65279.apps.googleusercontent.com'
+            )
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
