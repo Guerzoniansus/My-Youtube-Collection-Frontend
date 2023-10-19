@@ -13,6 +13,8 @@ export class LoginComponent {
 
   private loginUrl: string = environment.backendUrl + "/login"
 
+  public error: string = "";
+
   constructor(private authService: SocialAuthService, private http: HttpClient) {}
 
   ngOnInit() {
@@ -24,11 +26,11 @@ export class LoginComponent {
   login(idToken: string) {
     this.http.post(this.loginUrl, idToken, {responseType: 'text'}).subscribe({
       next: jwt => {
-        console.log(jwt);
+        this.error = "";
         this.test(jwt);
       },
       error: error => {
-        console.error('There was an error: ',  error);
+        this.error = "An error occurred, please try again.";
       }
     });
   }
@@ -36,6 +38,7 @@ export class LoginComponent {
   test(jwt: string) {
     const decoded: any = jwtDecode(jwt);
     console.log("Token info: ");
+    console.log(jwt);
     console.log(decoded);
     console.log("Email: " + decoded.sub);
   }

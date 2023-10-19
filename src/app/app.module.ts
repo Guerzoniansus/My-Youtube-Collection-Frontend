@@ -13,6 +13,7 @@ import { LoginComponent } from './login/login.component';
 import {HttpClientModule} from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
 import {GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig} 
     MatMenuModule,
     HttpClientModule,
     AppRoutingModule,
-    GoogleSigninButtonModule
+    GoogleSigninButtonModule,
+    MatInputModule
   ],
   providers: [
     {
