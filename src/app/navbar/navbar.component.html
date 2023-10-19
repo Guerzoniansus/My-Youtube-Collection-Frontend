@@ -3,8 +3,8 @@
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-button disabled>weezimonkey@somelongemail.com</button>
-    <button (click)="logout()" mat-menu-item>Logout</button>
+    <button *ngIf="userService.isLoggedIn()" mat-button disabled>{{ user?.email }}</button>
+    <button *ngIf="userService.isLoggedIn()" (click)="logout()" mat-menu-item>Logout</button>
   </mat-menu>
   <span class="hide-on-phone">My Youtube Collection</span>
 </mat-toolbar>

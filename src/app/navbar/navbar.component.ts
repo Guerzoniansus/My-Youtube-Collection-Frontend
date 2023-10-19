@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
+import {UserService} from "../service/user.service";
+import {User} from "../model/User";
 
 @Component({
   selector: 'app-navbar',
@@ -8,11 +10,14 @@ import {Router} from "@angular/router";
 })
 export class NavbarComponent {
 
+  public user?: User;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public userService: UserService) {
+    this.userService.getUser().subscribe(user => this.user = user);
   }
 
   logout() {
-    this.router.navigate(["home"]);
+    this.userService.logout();
+    window.location.reload();
   }
 }

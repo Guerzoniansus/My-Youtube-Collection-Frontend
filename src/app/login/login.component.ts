@@ -3,6 +3,9 @@ import {SocialAuthService} from "@abacritt/angularx-social-login";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import jwtDecode from "jwt-decode";
+import {UserService} from "../service/user.service";
+import {Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-login',
@@ -15,19 +18,22 @@ export class LoginComponent {
 
   public error: string = "";
 
-  constructor(private authService: SocialAuthService, private http: HttpClient) {}
+  constructor(private authService: SocialAuthService, private http: HttpClient,
+              private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     this.authService.authState.subscribe((user) => {
       this.login(user.idToken);
+      console.log("yo!!!!!!");
     });
   }
 
-  login(idToken: string) {
+  public login(idToken: string) {
     this.http.post(this.loginUrl, idToken, {responseType: 'text'}).subscribe({
       next: jwt => {
         this.error = "";
-        this.test(jwt);
+        this.userService.login(jwt);
+        this.router.navigate(["home"]);
       },
       error: error => {
         this.error = "An error occurred, please try again.";
@@ -35,7 +41,7 @@ export class LoginComponent {
     });
   }
 
-  test(jwt: string) {
+  private test2(jwt: string) {
     const decoded: any = jwtDecode(jwt);
     console.log("Token info: ");
     console.log(jwt);
