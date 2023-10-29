@@ -24,7 +24,6 @@ export class LoginComponent {
   ngOnInit() {
     this.authService.authState.subscribe((user) => {
       this.login(user.idToken);
-      console.log("yo!!!!!!");
     });
   }
 
