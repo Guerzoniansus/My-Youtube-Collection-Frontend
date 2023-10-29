@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './navbar/navbar.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatIcon, MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatMenuModule} from "@angular/material/menu";
 import { HomePageComponent } from './home/home-page/home-page.component';
@@ -36,6 +35,7 @@ import {MatInputModule} from "@angular/material/input";
   ],
   providers: [
     {
+      // https://github.com/abacritt/angularx-social-login
       provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: false,
@@ -43,7 +43,10 @@ import {MatInputModule} from "@angular/material/input";
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '1016912375337-7uhg06jqloqokfbh3fu5c86eqoj65279.apps.googleusercontent.com'
+              '1016912375337-7uhg06jqloqokfbh3fu5c86eqoj65279.apps.googleusercontent.com',
+              {
+                oneTapEnabled: false
+              }
             )
           }
         ],
