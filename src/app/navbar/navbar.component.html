@@ -1,0 +1,10 @@
+<mat-toolbar>
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button *ngIf="userService.isLoggedIn()" mat-button disabled>{{ user?.email }}</button>
+    <button *ngIf="userService.isLoggedIn()" (click)="logout()" mat-menu-item>Logout</button>
+  </mat-menu>
+  <span class="hide-on-phone">My Youtube Collection</span>
+</mat-toolbar>
