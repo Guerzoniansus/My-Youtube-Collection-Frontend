@@ -16,6 +16,9 @@ export class NavbarComponent {
     this.userService.getUser().subscribe(user => this.user = user);
   }
 
+  /**
+   * Logs out the user. Refreshes the page to make sure it goes correctly.
+   */
   logout() {
     this.userService.logout();
     window.location.reload();

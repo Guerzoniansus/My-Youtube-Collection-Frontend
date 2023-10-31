@@ -14,6 +14,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
 import {GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
 import {MatInputModule} from "@angular/material/input";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -22,18 +23,19 @@ import {MatInputModule} from "@angular/material/input";
     HomePageComponent,
     LoginComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    HttpClientModule,
-    AppRoutingModule,
-    GoogleSigninButtonModule,
-    MatInputModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        HttpClientModule,
+        AppRoutingModule,
+        GoogleSigninButtonModule,
+        MatInputModule,
+        MatProgressSpinnerModule
+    ],
   providers: [
     {
       // https://github.com/abacritt/angularx-social-login
