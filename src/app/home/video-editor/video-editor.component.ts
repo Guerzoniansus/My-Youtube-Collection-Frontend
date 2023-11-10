@@ -7,6 +7,7 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {FormControl} from "@angular/forms";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {YoutubeService} from "../../service/youtube.service";
 
 @Component({
   selector: 'app-video-editor',
@@ -15,17 +16,22 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 })
 export class VideoEditorComponent {
 
+  public videoUrl: string = "";
+  public validUrl: boolean = false;
+
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public tagCtrl = new FormControl();
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('videoEmbed') videoEmbed!: ElementRef;
 
   public video: Video = {
     videoID: undefined,
+    videoCode: "b-9sQsGEhEw",
     email: "",
     title: "",
-    alternativeTitle: "",
     channel: "",
+    alternativeTitle: "",
     dateCreated: new Date(),
     tags: []
   }
@@ -34,7 +40,7 @@ export class VideoEditorComponent {
   public filteredTags!: Observable<Tag[]>;
   public newTags: Tag[] = [];
 
-  constructor(private tagService: TagService) {
+  constructor(private tagService: TagService, private yt: YoutubeService) {
     this.tagCtrl.valueChanges.subscribe(search => {
       this.filteredTags = of(this.userTags.filter(tag =>
         tag.text.toLowerCase().includes(search)
@@ -84,5 +90,26 @@ export class VideoEditorComponent {
 
   sanitizeTagText(text: string): string {
     return text[0].toUpperCase() + text.slice(1).toLowerCase();
+  }
+
+  processYoutubeUrl() {
+    // TODO: display errors
+    const code = this.yt.extractCodeFromUrl(this.videoUrl);
+
+    if (code != undefined) {
+      this.yt.getVideoInfo(code).subscribe(data => {
+        this.video.title = data.items[0].snippet.title;
+        this.video.channel = data.items[0].snippet.channelTitle;
+        this.video.videoCode = code;
+        this.videoEmbed.nativeElement.innerHTML = (`<iframe width="368" height="207" src="https://www.youtube.com/embed/${this.video.videoCode}"
+              title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+        </iframe>`)
+        this.validUrl = true;
+      })
+    }
+  }
+
+  save() {
+    console.log(this.video);
   }
 }

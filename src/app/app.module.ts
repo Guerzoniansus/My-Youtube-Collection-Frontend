@@ -19,7 +19,7 @@ import { VideoEditorComponent } from './home/video-editor/video-editor.component
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
 
 @NgModule({
@@ -45,6 +45,7 @@ import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
     MatAutocompleteModule,
     MatChipsModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},

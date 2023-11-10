@@ -15,7 +15,7 @@ export class TagService {
     this.tagsSubject.next( [
       {tagID: undefined, email: undefined, text: "Rock"},
       {tagID: undefined, email: undefined, text: "Pop"},
-      {tagID: undefined, email: undefined, text: "EDM"}
+      {tagID: undefined, email: undefined, text: "Dubstep"}
     ]);
   }
 
