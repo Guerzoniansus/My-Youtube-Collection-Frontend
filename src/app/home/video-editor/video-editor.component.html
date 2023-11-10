@@ -1,0 +1,48 @@
+<div class="editor-window">
+  <button mat-icon-button aria-label="Close">
+    <mat-icon>close</mat-icon>
+  </button>
+  <div class="inner-editor-window">
+    <mat-form-field class="input-field">
+      <mat-label>Youtube URL</mat-label>
+      <input matInput>
+    </mat-form-field>
+    <form>
+      <iframe width="368" height="207" src="https://www.youtube.com/embed/b-9sQsGEhEw?si=pnJPBPyXyOM-XYsP"
+              title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+      </iframe>
+      <p class="input-label">Title</p>
+      <p>Video title</p>
+      <p class="input-label">Alternative title (optional)</p>
+      <mat-form-field class="input-field">
+        <mat-label>Enter alternative title</mat-label>
+        <input matInput>
+      </mat-form-field>
+      <p class="input-label">Tags</p>
+
+
+      <mat-form-field class="input-field">
+        <mat-label>Enter tags</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Tag selection">
+          <mat-chip-row *ngFor="let tag of video.tags" (removed)="removeTag(tag)">
+            {{tag.text}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input placeholder="New Tag..." #tagInput [formControl]="tagCtrl"
+               [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addTag($event)"/>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+          <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+            {{tag.text}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+
+    <button class="save-button" mat-flat-button color="primary">Save</button>
+  </div>
+</div>

@@ -1,3 +1,12 @@
 <div>
   Home page!
+  <app-video-editor *ngIf="editingVideo"></app-video-editor>
+</div>
+
+<button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video">
+  <mat-icon>add</mat-icon>
+</button>
+
+<div class="overlay" *ngIf="editingVideo" (click)="editingVideo = !editingVideo">
+
 </div>

@@ -9,12 +9,18 @@ import {Router} from "@angular/router";
 })
 export class HomePageComponent {
 
+  public editingVideo: boolean = false;
+
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     if (this.userService.isLoggedIn() == false) {
       this.router.navigate(["/login"]);
     }
+  }
+
+  public addVideo() {
+    this.editingVideo = !this.editingVideo;
   }
 
 }

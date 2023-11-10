@@ -15,28 +15,39 @@ import { AppRoutingModule } from './app-routing.module';
 import {GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
 import {MatInputModule} from "@angular/material/input";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { VideoEditorComponent } from './home/video-editor/video-editor.component';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatChipsModule} from "@angular/material/chips";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     HomePageComponent,
-    LoginComponent
+    LoginComponent,
+    VideoEditorComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatMenuModule,
-        HttpClientModule,
-        AppRoutingModule,
-        GoogleSigninButtonModule,
-        MatInputModule,
-        MatProgressSpinnerModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    HttpClientModule,
+    AppRoutingModule,
+    GoogleSigninButtonModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    ReactiveFormsModule,
+  ],
   providers: [
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {
       // https://github.com/abacritt/angularx-social-login
       provide: 'SocialAuthServiceConfig',

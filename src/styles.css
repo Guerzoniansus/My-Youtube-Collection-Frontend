@@ -9,10 +9,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
-.content-margin {
-  margin: 50px;
-}
-
 .center {
   display: flex; justify-content:center;
 }
