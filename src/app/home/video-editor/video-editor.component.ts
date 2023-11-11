@@ -28,7 +28,6 @@ export class VideoEditorComponent {
   public video: Video = {
     videoID: undefined,
     videoCode: "b-9sQsGEhEw",
-    email: "",
     title: "",
     channel: "",
     alternativeTitle: "",
@@ -59,7 +58,6 @@ export class VideoEditorComponent {
     if (value && !this.video.tags!.map(tag => tag.text.toLowerCase()).includes(value)) {
       const newTag: Tag = {
         tagID: undefined,
-        email: undefined,
         text: this.sanitizeTagText(value.trim())
       };
 
@@ -73,7 +71,6 @@ export class VideoEditorComponent {
   selectedTag(event: MatAutocompleteSelectedEvent): void {
     this.video.tags!.push({
       tagID: undefined,
-      email: undefined,
       text: this.sanitizeTagText(event.option.viewValue)
     });
     this.tagInput.nativeElement.value = "";

@@ -13,9 +13,9 @@ export class TagService {
 
   constructor() {
     this.tagsSubject.next( [
-      {tagID: undefined, email: undefined, text: "Rock"},
-      {tagID: undefined, email: undefined, text: "Pop"},
-      {tagID: undefined, email: undefined, text: "Dubstep"}
+      {tagID: undefined, text: "Rock"},
+      {tagID: undefined, text: "Pop"},
+      {tagID: undefined, text: "Dubstep"}
     ]);
   }
 
