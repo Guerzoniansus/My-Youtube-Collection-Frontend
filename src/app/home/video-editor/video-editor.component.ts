@@ -83,6 +83,12 @@ export class VideoEditorComponent {
     if (index >= 0) {
       this.video.tags!.splice(index, 1);
     }
+
+    const indexNewTags = this.newTags.indexOf(tag);
+
+    if (indexNewTags >= 0) {
+      this.newTags.splice(index, 1);
+    }
   }
 
   sanitizeTagText(text: string): string {
