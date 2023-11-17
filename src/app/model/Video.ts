@@ -6,6 +6,5 @@ export interface Video {
   title?: string;
   channel?: string;
   alternativeTitle?: string;
-  dateCreated?: Date;
   tags?: Tag[];
 }

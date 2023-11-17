@@ -8,6 +8,7 @@ import {FormControl} from "@angular/forms";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {YoutubeService} from "../../service/youtube.service";
+import {VideoService} from "../../service/video.service";
 
 @Component({
   selector: 'app-video-editor',
@@ -18,6 +19,8 @@ export class VideoEditorComponent {
 
   public videoUrl: string = "";
   public validUrl: boolean = false;
+  public error: string = "";
+  public isSaving: boolean = false;
 
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public tagCtrl = new FormControl();
@@ -31,19 +34,19 @@ export class VideoEditorComponent {
     title: "",
     channel: "",
     alternativeTitle: "",
-    dateCreated: new Date(),
     tags: []
   }
 
-  public userTags: Tag[] = [];
-  public filteredTags!: Observable<Tag[]>;
-  public newTags: Tag[] = [];
+  public userTags: Tag[] = []; // All tags in user account, for autocomplete
+  public filteredTags!: Observable<Tag[]>; // For autocomplete
+  public newTags: Tag[] = []; // Tags that don't exist in database / userTags yet
+  public selectedTags: Tag[] = []; // The selected tags shown in frontend
 
-  constructor(private tagService: TagService, private yt: YoutubeService) {
+  constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
     this.tagCtrl.valueChanges.subscribe(search => {
       this.filteredTags = of(this.userTags.filter(tag =>
         tag.text.toLowerCase().includes(search)
-        && !this.video.tags!.map(x => x.text).includes(tag.text) // Make sure user can't click same tag multiple times
+        && !this.selectedTags!.map(x => x.text).includes(tag.text) // Make sure user can't click same tag multiple times
       ));
     });
   }
@@ -52,36 +55,41 @@ export class VideoEditorComponent {
     this.tagService.getTags().subscribe(tags => this.userTags = tags);
   }
 
+  /**
+   * Event that gets fired when a tag gets typed and enter gets pressed
+   * @param event
+   */
   addTag(event: MatChipInputEvent): void {
     const value = event.value.trim();
 
-    if (value && !this.video.tags!.map(tag => tag.text.toLowerCase()).includes(value)) {
+    if (value && !this.selectedTags!.map(tag => tag.text.toLowerCase()).includes(value)) {
       const newTag: Tag = {
         tagID: undefined,
         text: this.sanitizeTagText(value.trim())
       };
 
-      this.video.tags!.push(newTag);
+      this.selectedTags!.push(newTag);
       this.newTags.push(newTag);
       event.chipInput!.clear();
       this.tagCtrl.setValue(null);
     }
   }
 
-  selectedTag(event: MatAutocompleteSelectedEvent): void {
-    this.video.tags!.push({
-      tagID: undefined,
-      text: this.sanitizeTagText(event.option.viewValue)
-    });
+  /**
+   * Event that gets fired when a tag gets clicked in autocomplete
+   * @param tag
+   */
+  selectedTag(tag: Tag): void {
+    this.selectedTags!.push(tag);
     this.tagInput.nativeElement.value = "";
     this.tagCtrl.setValue(null);
   }
 
   removeTag(tag: Tag): void {
-    const index = this.video.tags!.indexOf(tag);
+    const index = this.selectedTags!.indexOf(tag);
 
     if (index >= 0) {
-      this.video.tags!.splice(index, 1);
+      this.selectedTags!.splice(index, 1);
     }
 
     const indexNewTags = this.newTags.indexOf(tag);
@@ -96,23 +104,96 @@ export class VideoEditorComponent {
   }
 
   processYoutubeUrl() {
-    // TODO: display errors
     const code = this.yt.extractCodeFromUrl(this.videoUrl);
 
     if (code != undefined) {
-      this.yt.getVideoInfo(code).subscribe(data => {
-        this.video.title = data.items[0].snippet.title;
-        this.video.channel = data.items[0].snippet.channelTitle;
-        this.video.videoCode = code;
-        this.videoEmbed.nativeElement.innerHTML = (`<iframe width="368" height="207" src="https://www.youtube.com/embed/${this.video.videoCode}"
+      this.yt.getVideoInfo(code).subscribe({
+        error: () => this.setError("Could not process this URL."),
+        next: (data) => {
+          this.video.title = data.items[0].snippet.title;
+          this.video.channel = data.items[0].snippet.channelTitle;
+          this.video.videoCode = code;
+          this.videoEmbed.nativeElement.innerHTML = (`<iframe width="368" height="207" src="https://www.youtube.com/embed/${this.video.videoCode}"
               title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
         </iframe>`)
-        this.validUrl = true;
+          this.validUrl = true;
+          this.setError("");
+        }
       })
+    }
+
+    else this.setError("Could not parse this URL.")
+  }
+
+  saveAll() {
+    this.isSaving = true;
+
+    // We save the tags first, then if any tags were new, save and retrieve them from the backend
+    // and add them to the video, but now with IDs in them
+    this.saveTags(
+      () => {
+        this.saveVideo(
+          () => {
+            this.finishEditing();
+            this.isSaving = false;
+          },
+          () => {
+            this.setError("There was an error saving the video, please try again later.")
+            this.isSaving = false;
+          }
+        )
+      },
+      () => {
+        this.setError("There was an error saving the tags, please try again later.");
+        this.isSaving = false;
+      }
+    );
+  }
+
+  private saveTags(success: Function, error: Function) {
+    if (this.newTags.length == 0) {
+      this.video.tags = this.selectedTags;
+      success();
+    }
+
+    // Save new tags to database and add them to video so we don't send tags without IDs
+    else {
+      this.tagService.saveTags(this.newTags).subscribe({
+        next: (tagsSavedToDatabase) => {
+          const videoTags: Tag[] = [
+            ...this.selectedTags.filter(tag => tag.tagID),
+            ...tagsSavedToDatabase
+          ];
+          this.video.tags = videoTags;
+          success();
+        },
+
+        error: (error) => {
+          error();
+        }
+      });
     }
   }
 
-  save() {
-    console.log(this.video);
+  private saveVideo(success: Function, error: Function) {
+    this.isSaving = true;
+
+    this.videoService.saveVideo(this.video).subscribe(
+      {
+        complete: () => success(),
+        error: (error) => {
+          this.setError("There was an error saving the video, please try again later.")
+          this.isSaving = false;
+        }
+      }
+    );
+  }
+
+  finishEditing(): void {
+    alert("video saved");
+  }
+
+  private setError(error: string): void {
+    this.error = error;
   }
 }

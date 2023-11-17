@@ -25,7 +25,7 @@
       <mat-form-field class="input-field">
         <mat-label>Enter tags</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tag selection">
-          <mat-chip-row *ngFor="let tag of video.tags" (removed)="removeTag(tag)">
+          <mat-chip-row *ngFor="let tag of selectedTags" (removed)="removeTag(tag)">
             {{tag.text}}
             <button matChipRemove>
               <mat-icon>cancel</mat-icon>
@@ -36,14 +36,16 @@
                [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                (matChipInputTokenEnd)="addTag($event)"/>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event.option.value)">
           <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
             {{tag.text}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
       <p>{{video | json}}</p>
-      <button (click)="save()" class="save-button" mat-flat-button color="primary">Save</button>
+      <button (click)="saveAll()" *ngIf="isSaving == false" class="bottom-right" mat-flat-button color="primary">Save</button>
+      <mat-spinner class="bottom-right" [diameter]="30" *ngIf="isSaving"></mat-spinner>
     </form>
+    <mat-error>{{error}}</mat-error>
   </div>
 </div>
