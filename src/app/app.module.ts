@@ -21,6 +21,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
+import { VideoComponent } from './home/video/video.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
     NavbarComponent,
     HomePageComponent,
     LoginComponent,
-    VideoEditorComponent
+    VideoEditorComponent,
+    VideoComponent
   ],
   imports: [
     BrowserModule,

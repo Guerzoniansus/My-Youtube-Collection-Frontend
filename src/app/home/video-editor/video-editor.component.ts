@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {TagService} from "../../service/tag.service";
 import {Video} from "../../model/Video";
 import {Tag} from "../../model/Tag";
@@ -15,7 +15,9 @@ import {VideoService} from "../../service/video.service";
   templateUrl: './video-editor.component.html',
   styleUrls: ['./video-editor.component.css']
 })
-export class VideoEditorComponent {
+export class VideoEditorComponent implements OnInit {
+
+  @Output() savedVideoEvent = new EventEmitter<string>();
 
   public videoUrl: string = "";
   public validUrl: boolean = false;
@@ -37,10 +39,17 @@ export class VideoEditorComponent {
     tags: []
   }
 
-  public userTags: Tag[] = []; // All tags in user account, for autocomplete
-  public filteredTags!: Observable<Tag[]>; // For autocomplete
-  public newTags: Tag[] = []; // Tags that don't exist in database / userTags yet
-  public selectedTags: Tag[] = []; // The selected tags shown in frontend
+  /** All tags in user account, for autocomplete. */
+  public userTags: Tag[] = [];
+
+  /** For autocomplete.*/
+  public filteredTags!: Observable<Tag[]>;
+
+  /** Tags that don't exist in database / userTags yet. */
+  public newTags: Tag[] = [];
+
+  /** The selected tags shown in frontend. */
+  public selectedTags: Tag[] = [];
 
   constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
     this.tagCtrl.valueChanges.subscribe(search => {
@@ -178,7 +187,7 @@ export class VideoEditorComponent {
   private saveVideo(success: Function, error: Function) {
     this.isSaving = true;
 
-    this.videoService.saveVideo(this.video).subscribe(
+    this.videoService.createVideo(this.video).subscribe(
       {
         complete: () => success(),
         error: (error) => {
@@ -190,7 +199,7 @@ export class VideoEditorComponent {
   }
 
   finishEditing(): void {
-    alert("video saved");
+    this.savedVideoEvent.emit("Saved video");
   }
 
   private setError(error: string): void {

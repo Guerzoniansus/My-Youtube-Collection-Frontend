@@ -17,7 +17,7 @@ export class VideoService {
   private URL: string = environment.backendUrl + "/videos";
 
   constructor(private userService: UserService, private http: HttpClient) {
-    // this.refreshVideos();
+    this.refreshVideos();
   }
 
   public getVideos(): Observable<Video[]> {
@@ -28,7 +28,7 @@ export class VideoService {
     this.http.get<Video[]>(this.URL, this.createHttpOption()).subscribe(data => this.videosSubject.next(data));
   }
 
-  public saveVideo(video: Video): Observable<any> {
+  public createVideo(video: Video): Observable<any> {
     return this.http.post<Video>(this.URL, video, this.createHttpOption());
   }
 
