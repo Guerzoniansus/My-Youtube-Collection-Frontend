@@ -22,6 +22,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
 import { VideoComponent } from './home/video/video.component';
+import {YouTubePlayerModule} from "@angular/youtube-player";
 
 @NgModule({
   declarations: [
@@ -32,23 +33,24 @@ import { VideoComponent } from './home/video/video.component';
     VideoEditorComponent,
     VideoComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    HttpClientModule,
-    AppRoutingModule,
-    GoogleSigninButtonModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatAutocompleteModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    FormsModule,
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        HttpClientModule,
+        AppRoutingModule,
+        GoogleSigninButtonModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatAutocompleteModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        YouTubePlayerModule,
+    ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {
