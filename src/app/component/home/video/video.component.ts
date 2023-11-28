@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Video} from "../../model/Video";
+import {Video} from "../../../model/Video";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 
 @Component({

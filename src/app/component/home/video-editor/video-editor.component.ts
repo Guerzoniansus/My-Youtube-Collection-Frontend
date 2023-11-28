@@ -1,14 +1,15 @@
 import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {TagService} from "../../service/tag.service";
-import {Video} from "../../model/Video";
-import {Tag} from "../../model/Tag";
+import {TagService} from "../../../service/tag.service";
+import {Video} from "../../../model/Video";
+import {Tag} from "../../../model/Tag";
 import {Observable, of} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {FormControl} from "@angular/forms";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {YoutubeService} from "../../service/youtube.service";
-import {VideoService} from "../../service/video.service";
+import {YoutubeService} from "../../../service/youtube.service";
+import {VideoService} from "../../../service/video.service";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-video-editor',
@@ -24,11 +25,18 @@ export class VideoEditorComponent implements OnInit {
   public error: string = "";
   public isSaving: boolean = false;
 
+  @ViewChild('tagInputTooltip') tagInputTooltip!: MatTooltip;
+  public tagInputTooltipText: string = "";
+
   public separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  /** Input field */
   public tagCtrl = new FormControl();
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
   @ViewChild('videoEmbed') videoEmbed!: ElementRef;
+
+
 
   public video: Video = {
     videoID: undefined,
@@ -39,10 +47,10 @@ export class VideoEditorComponent implements OnInit {
     tags: []
   }
 
-  /** All tags in user account, for autocomplete. */
+  /** All tags in user account. */
   public userTags: Tag[] = [];
 
-  /** For autocomplete.*/
+  /** Autocomplete results. */
   public filteredTags!: Observable<Tag[]>;
 
   /** Tags that don't exist in database / userTags yet. */
@@ -52,11 +60,19 @@ export class VideoEditorComponent implements OnInit {
   public selectedTags: Tag[] = [];
 
   constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
-    this.tagCtrl.valueChanges.subscribe(search => {
-      this.filteredTags = of(this.userTags.filter(tag =>
-        tag.text.toLowerCase().includes(search)
+    this.tagCtrl.valueChanges.subscribe(input => {
+      const filteredTags: Tag[] = this.userTags.filter(tag =>
+        tag.text.toLowerCase().includes(input)
         && !this.selectedTags!.map(x => x.text).includes(tag.text) // Make sure user can't click same tag multiple times
-      ));
+      );
+
+      this.filteredTags = of(filteredTags);
+
+      // If input exists, autosuggests gives no options, and the tag isnt already selected
+      if (input && filteredTags.length == 0 && (!this.isTagAlreadySelected(input))) {
+        this.tagInputTooltipText = `Creating new tag [${input}] in your account.`;
+        this.tagInputTooltip.show();
+      } else this.tagInputTooltipText = "";
     });
   }
 
@@ -69,16 +85,17 @@ export class VideoEditorComponent implements OnInit {
    * @param event
    */
   addTag(event: MatChipInputEvent): void {
-    const value = event.value.trim();
+    const tagText = event.value.trim();
 
-    if (value && !this.selectedTags!.map(tag => tag.text.toLowerCase()).includes(value)) {
+    if (tagText && (!this.isTagAlreadySelected(tagText))) {
       const newTag: Tag = {
         tagID: undefined,
-        text: this.sanitizeTagText(value.trim())
+        text: this.sanitizeTagText(tagText.trim())
       };
 
       this.selectedTags!.push(newTag);
       this.newTags.push(newTag);
+
       event.chipInput!.clear();
       this.tagCtrl.setValue(null);
     }
@@ -110,6 +127,14 @@ export class VideoEditorComponent implements OnInit {
 
   sanitizeTagText(text: string): string {
     return text[0].toUpperCase() + text.slice(1).toLowerCase();
+  }
+
+  /**
+   * Checks if a tag has already been selected
+   * @param tagText The text of the tag
+   */
+  isTagAlreadySelected(tagText: string): boolean {
+    return this.selectedTags!.map(tag => tag.text.toLowerCase()).includes(tagText.toLowerCase());
   }
 
   processYoutubeUrl() {

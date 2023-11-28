@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import {SocialAuthService} from "@abacritt/angularx-social-login";
-import {environment} from "../../environments/environment";
+import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import jwtDecode from "jwt-decode";
-import {UserService} from "../service/user.service";
+import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
 
 

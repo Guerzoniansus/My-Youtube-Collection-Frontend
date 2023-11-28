@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {UserService} from "../../service/user.service";
+import {UserService} from "../../../service/user.service";
 import {Router} from "@angular/router";
-import {VideoService} from "../../service/video.service";
-import {Video} from "../../model/Video";
+import {VideoService} from "../../../service/video.service";
+import {Video} from "../../../model/Video";
 
 @Component({
   selector: 'app-home-page',

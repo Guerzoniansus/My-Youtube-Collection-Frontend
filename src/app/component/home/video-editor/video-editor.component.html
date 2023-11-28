@@ -23,7 +23,7 @@
 
 
       <mat-form-field class="input-field">
-        <mat-label>Enter tags</mat-label>
+        <mat-label>Select your tags, or a type a name and press enter to create a new one</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tag selection">
           <mat-chip-row *ngFor="let tag of selectedTags" (removed)="removeTag(tag)">
             {{tag.text}}
@@ -32,7 +32,10 @@
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input placeholder="New Tag..." #tagInput [formControl]="tagCtrl"
+        <input #tagInput [formControl]="tagCtrl"
+               #tagInputTooltip="matTooltip"
+               [matTooltip]="tagInputTooltipText"
+               matTooltipPosition="above"
                [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                (matChipInputTokenEnd)="addTag($event)"/>

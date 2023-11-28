@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import { UserService } from './user.service';
 import {SocialAuthService} from "@abacritt/angularx-social-login";
-import {HomePageComponent} from "../home/home-page/home-page.component";
+import {HomePageComponent} from "../component/home/home-page/home-page.component";
 import {User} from "../model/User";
 
 describe('UserService', () => {
