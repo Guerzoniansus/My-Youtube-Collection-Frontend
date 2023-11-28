@@ -1,0 +1,19 @@
+<div>
+  <app-video-editor (savedVideoEvent)="onSavedVideoEvent()" *ngIf="editingVideo"></app-video-editor>
+</div>
+
+<button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video">
+  <mat-icon>add</mat-icon>
+</button>
+
+<p>
+  <mat-error>{{error}}</mat-error>
+</p>
+
+<div class="videos-container">
+  <app-video class="video" *ngFor="let video of videos" [video]="video"></app-video>
+</div>
+
+<div class="overlay" *ngIf="editingVideo" (click)="editingVideo = !editingVideo">
+
+</div>

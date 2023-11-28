@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import jwtDecode from "jwt-decode";
 import {BehaviorSubject, Observable} from "rxjs";
 import {User} from "../model/User";
+import {HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,16 @@ export class UserService {
    */
   public isLoggedIn() {
     return this.userSubject.value != undefined;
+  }
+
+  /**
+   * Creates a HTTP option that includes the JWT token for authentication.
+   */
+  public getAuthorizationHeader(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + this.getJwt()
+    });
   }
 
   /**
