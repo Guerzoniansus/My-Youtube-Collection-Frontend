@@ -6,5 +6,5 @@
     <button *ngIf="userService.isLoggedIn()" mat-button disabled>{{ user?.email }}</button>
     <button *ngIf="userService.isLoggedIn()" (click)="logout()" mat-menu-item>Logout</button>
   </mat-menu>
-  <span class="hide-on-phone">My Youtube Collection</span>
+  <span [routerLink]="'/home'" class="home-button hide-on-phone">My Youtube Collection</span>
 </mat-toolbar>

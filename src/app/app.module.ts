@@ -20,9 +20,7 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
 import { VideoComponent } from './home/video/video.component';
-import {YouTubePlayerModule} from "@angular/youtube-player";
 
 @NgModule({
   declarations: [
@@ -49,7 +47,6 @@ import {YouTubePlayerModule} from "@angular/youtube-player";
         MatChipsModule,
         ReactiveFormsModule,
         FormsModule,
-        YouTubePlayerModule,
     ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},

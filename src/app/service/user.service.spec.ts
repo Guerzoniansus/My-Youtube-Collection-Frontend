@@ -5,7 +5,7 @@ import {SocialAuthService} from "@abacritt/angularx-social-login";
 import {HomePageComponent} from "../home/home-page/home-page.component";
 import {User} from "../model/User";
 
-fdescribe('UserService', () => {
+describe('UserService', () => {
   let service: UserService;
 
   beforeEach(() => {
