@@ -17,15 +17,25 @@ export class SearchService {
     this.addSearchTags(this.route.snapshot.params['tags']);
   }
 
+  /**
+   * Gets the current search query.
+   */
   getSearchQuery(): BehaviorSubject<string> {
     return this.query;
   }
 
+  /**
+   * Updates the search query and starts a new search.
+   * @param query The new search query.
+   */
   updateSearchQuery(query: string): void {
     this.query.next(query);
     this.updateUrl();
   }
 
+  /**
+   * Gets the tags that are currently being searched for.
+   */
   getSearchTags(): BehaviorSubject<Tag[]> {
     return this.tags;
   }
