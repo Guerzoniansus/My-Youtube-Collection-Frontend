@@ -32,7 +32,7 @@
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input #tagInput [formControl]="tagCtrl"
+        <input #tagInput [formControl]="tagInputElement"
                #tagInputTooltip="matTooltip"
                [matTooltip]="tagInputTooltipText"
                matTooltipPosition="above"
@@ -40,7 +40,7 @@
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                (matChipInputTokenEnd)="addTag($event)"/>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event.option.value)">
-          <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+          <mat-option *ngFor="let tag of autocompleteTags | async" [value]="tag">
             {{tag.text}}
           </mat-option>
         </mat-autocomplete>

@@ -1,3 +1,16 @@
-<mat-form-field class="input-field" (keyup.enter)="pressedEnter()">
-  <input matInput [(ngModel)]="input">
+<mat-form-field class="input-field">
+  <mat-chip-grid #chipGrid style="display: none">
+    <mat-chip-row *ngFor="let tag of selectedTags">
+    </mat-chip-row>
+  </mat-chip-grid>
+
+  <input #tagInput [formControl]="tagInputElement"
+         [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+         (matChipInputTokenEnd)="pressedEnter($event.value)"/>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event.option.value)">
+    <mat-option *ngFor="let tag of autocompleteTags | async" [value]="tag">
+      {{tag.text}}
+    </mat-option>
+  </mat-autocomplete>
 </mat-form-field>

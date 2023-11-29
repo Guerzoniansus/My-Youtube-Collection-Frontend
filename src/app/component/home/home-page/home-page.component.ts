@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {VideoService} from "../../../service/video.service";
 import {Video} from "../../../model/Video";
 import {SearchService} from "../../../service/search.service";
+import {Tag} from "../../../model/Tag";
 
 @Component({
   selector: 'app-home-page',
@@ -14,7 +15,10 @@ export class HomePageComponent implements OnInit {
 
   public editingVideo: boolean = false;
   public videos: Video[] = [];
-  public error: String = "";
+  public error: string = "";
+
+  public searchQuery: string = "";
+  public searchTags: Tag[] = [];
 
   constructor(private userService: UserService, private router: Router, private videoService: VideoService,
               private searchService: SearchService) {}
@@ -30,19 +34,28 @@ export class HomePageComponent implements OnInit {
       error: () => this.error = "An error occured, videos could not be retrieved."
     })
 
-
+    this.searchService.getSearchQuery().subscribe(searchQuery => this.searchQuery = searchQuery);
+    this.searchService.getSearchTags().subscribe(searchTags => this.searchTags = searchTags);
   }
 
-  public addVideo() {
+  /** Event that gets fired when the user clicks on the add video button. */
+  addVideo() {
     this.editingVideo = !this.editingVideo;
   }
 
+  /**
+   * Event that gets fired when the user closes the video editor window.
+   * @param message The event message.
+   */
   onFinishedEditingVideoEvent(message: string) {
-    console.log("a " + message);
     this.editingVideo = false;
 
     if (message == "Saved video") {
       this.videoService.refreshVideos();
     }
+  }
+
+  removeTag(tag: Tag): void {
+    this.searchService.removeSearchTag(tag);
   }
 }

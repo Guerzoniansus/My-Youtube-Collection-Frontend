@@ -30,16 +30,32 @@ export class SearchService {
     return this.tags;
   }
 
+  /**
+   * Adds the given tags to the search query.
+   * @param tags The tags to search for.
+   */
   addSearchTags(tags: Tag[]): void {
-    const updatedTags: Tag[] = [...this.tags.value, ...tags];
+    const updatedTags: Tag[] = tags ?  [...this.tags.value, ...tags] : [];
     this.tags.next(updatedTags);
     this.updateUrl();
   }
 
+  /**
+   * Adds a tag to the search query.
+   * @param tag The tag to search for.
+   */
   addSearchTag(tag: Tag): void {
-    const tags: Tag[] = [...this.tags.value, tag];
-    this.tags.next(tags);
-    this.updateUrl();
+    this.addSearchTags([tag]);
+  }
+
+  /**
+   * Removes a tag from the search query.
+   * @param tag The tag to remove.
+   */
+  removeSearchTag(tag: Tag) : void {
+    const newTags: Tag[] = this.tags.value.filter(x => x !== tag);
+    this.tags.next(newTags);
+    this.updateUrl()
   }
 
   /**

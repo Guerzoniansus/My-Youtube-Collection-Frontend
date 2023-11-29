@@ -1,20 +1,75 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SearchService} from "../../service/search.service";
+import {Tag} from "../../model/Tag";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {Observable, of} from "rxjs";
+import {TagService} from "../../service/tag.service";
+import {VideoService} from "../../service/video.service";
+import {YoutubeService} from "../../service/youtube.service";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css']
 })
-export class SearchBarComponent {
-  public input: string = "";
+export class SearchBarComponent implements OnInit {
+  /** Keys that can be used to submit tne input */
+  public separatorKeysCodes: number[] = [ENTER];
 
-  constructor(private searchService: SearchService) {}
+  /** Input field */
+  public tagInputElement = new FormControl();
+  @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
+
+  /** Autocomplete results. */
+  public autocompleteTags!: Observable<Tag[]>;
+
+  /** All tags in user account. */
+  public userTags: Tag[] = [];
+
+  /** The selected tags shown in frontend. */
+  public selectedTags: Tag[] = [];
+
+  constructor(private searchService: SearchService, private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
+    this.tagInputElement.valueChanges.subscribe(input => {
+      // Create the list of tags that show up in autocomplete
+      const filteredTags: Tag[] = this.userTags.filter(tag =>
+        tag.text.toLowerCase().includes(input)
+        && (!this.isTagAlreadySelected(input))
+      );
+
+      this.autocompleteTags = of(filteredTags);
+    });
+  }
+
+  ngOnInit() {
+    this.tagService.getTags().subscribe(tags => this.userTags = tags);
+    this.searchService.getSearchTags().subscribe(tags => this.selectedTags = tags);
+  }
 
   /**
-   * Fired when the user presses enter on the search bar
+   * Checks if a tag has already been selected.
+   * @param tagText The text of the tag.
    */
-  pressedEnter() {
-    this.searchService.updateSearchQuery(this.input);
+  isTagAlreadySelected(tagText: string): boolean {
+    return this.selectedTags.map(tag => tag.text.toLowerCase()).includes(tagText.toLowerCase());
+  }
+
+  /**
+   * Event that gets fired when a tag gets clicked in autocomplete.
+   * Notifies the search service to add the selected tag to the search results.
+   * @param tag The tag that was selected.
+   */
+  selectedTag(tag: Tag): void {
+    this.searchService.addSearchTag(tag);
+    this.tagInput.nativeElement.value = "";
+    this.tagInputElement.setValue(null);
+  }
+
+  /**
+   * Fired when the user presses enter on the search bar.
+   */
+  pressedEnter(input: string) {
+    this.searchService.updateSearchQuery(input);
   }
 }

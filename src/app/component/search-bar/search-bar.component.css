@@ -7,4 +7,8 @@
 
 .input-field {
   width: 50%;
+  height: 30px !important;
+  align-self: center;
+  padding: 0;
+  margin: 0;
 }

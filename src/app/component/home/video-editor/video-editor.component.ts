@@ -31,7 +31,7 @@ export class VideoEditorComponent implements OnInit {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   /** Input field */
-  public tagCtrl = new FormControl();
+  public tagInputElement = new FormControl();
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
   @ViewChild('videoEmbed') videoEmbed!: ElementRef;
@@ -49,7 +49,7 @@ export class VideoEditorComponent implements OnInit {
   public userTags: Tag[] = [];
 
   /** Autocomplete results. */
-  public filteredTags!: Observable<Tag[]>;
+  public autocompleteTags!: Observable<Tag[]>;
 
   /** Tags that don't exist in database / userTags yet. */
   public newTags: Tag[] = [];
@@ -58,13 +58,13 @@ export class VideoEditorComponent implements OnInit {
   public selectedTags: Tag[] = [];
 
   constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
-    this.tagCtrl.valueChanges.subscribe(input => {
+    this.tagInputElement.valueChanges.subscribe(input => {
       const filteredTags: Tag[] = this.userTags.filter(tag =>
         tag.text.toLowerCase().includes(input)
-        && !this.selectedTags!.map(x => x.text).includes(tag.text) // Make sure user can't click same tag multiple times
+        && (!this.isTagAlreadySelected(input)) // Make sure user can't click same tag multiple times
       );
 
-      this.filteredTags = of(filteredTags);
+      this.autocompleteTags = of(filteredTags);
 
       // If input exists, autosuggests gives no options, and the tag isnt already selected
       if (input && filteredTags.length == 0 && (!this.isTagAlreadySelected(input))) {
@@ -95,7 +95,7 @@ export class VideoEditorComponent implements OnInit {
       this.newTags.push(newTag);
 
       event.chipInput!.clear();
-      this.tagCtrl.setValue(null);
+      this.tagInputElement.setValue(null);
     }
   }
 
@@ -106,7 +106,7 @@ export class VideoEditorComponent implements OnInit {
   selectedTag(tag: Tag): void {
     this.selectedTags!.push(tag);
     this.tagInput.nativeElement.value = "";
-    this.tagCtrl.setValue(null);
+    this.tagInputElement.setValue(null);
   }
 
   removeTag(tag: Tag): void {
