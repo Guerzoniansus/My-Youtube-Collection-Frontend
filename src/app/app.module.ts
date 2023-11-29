@@ -22,6 +22,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { VideoComponent } from './component/home/video/video.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { SearchBarComponent } from './component/search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     HomePageComponent,
     LoginComponent,
     VideoEditorComponent,
-    VideoComponent
+    VideoComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,

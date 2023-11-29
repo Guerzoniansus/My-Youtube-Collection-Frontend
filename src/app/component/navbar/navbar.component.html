@@ -7,4 +7,5 @@
     <button *ngIf="userService.isLoggedIn()" (click)="logout()" mat-menu-item>Logout</button>
   </mat-menu>
   <span [routerLink]="'/home'" class="home-button hide-on-phone">My Youtube Collection</span>
+  <app-search-bar></app-search-bar>
 </mat-toolbar>

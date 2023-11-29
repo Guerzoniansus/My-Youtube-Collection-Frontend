@@ -1,21 +1,23 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../../service/user.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {VideoService} from "../../../service/video.service";
 import {Video} from "../../../model/Video";
+import {SearchService} from "../../../service/search.service";
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
 
   public editingVideo: boolean = false;
   public videos: Video[] = [];
   public error: String = "";
 
-  constructor(private userService: UserService, private router: Router, private videoService: VideoService) {}
+  constructor(private userService: UserService, private router: Router, private videoService: VideoService,
+              private searchService: SearchService) {}
 
   ngOnInit() {
     if (this.userService.isLoggedIn() == false) {
@@ -27,6 +29,8 @@ export class HomePageComponent {
       // TODO: Error doesn't work
       error: () => this.error = "An error occured, videos could not be retrieved."
     })
+
+
   }
 
   public addVideo() {
