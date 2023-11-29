@@ -33,10 +33,12 @@ export class HomePageComponent {
     this.editingVideo = !this.editingVideo;
   }
 
-  onSavedVideoEvent() {
+  onFinishedEditingVideoEvent(message: string) {
+    console.log("a " + message);
     this.editingVideo = false;
-    this.videoService.refreshVideos();
-  }
 
-  protected readonly undefined = undefined;
+    if (message == "Saved video") {
+      this.videoService.refreshVideos();
+    }
+  }
 }

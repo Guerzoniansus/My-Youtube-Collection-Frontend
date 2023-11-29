@@ -36,8 +36,6 @@ export class VideoEditorComponent implements OnInit {
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
   @ViewChild('videoEmbed') videoEmbed!: ElementRef;
 
-
-
   public video: Video = {
     videoID: undefined,
     videoCode: "b-9sQsGEhEw",
@@ -168,7 +166,7 @@ export class VideoEditorComponent implements OnInit {
       () => {
         this.saveVideo(
           () => {
-            this.finishEditing();
+            this.finishEditing("Saved video");
             this.isSaving = false;
           },
           () => {
@@ -223,8 +221,8 @@ export class VideoEditorComponent implements OnInit {
     );
   }
 
-  finishEditing(): void {
-    this.savedVideoEvent.emit("Saved video");
+  finishEditing(message: string): void {
+    this.savedVideoEvent.emit(message);
   }
 
   private setError(error: string): void {
