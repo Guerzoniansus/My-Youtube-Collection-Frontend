@@ -113,13 +113,13 @@ export class VideoEditorComponent implements OnInit {
     const index = this.selectedTags!.indexOf(tag);
 
     if (index >= 0) {
-      this.selectedTags!.splice(index, 1);
+      this.selectedTags!.splice(index, 1); // Removes element from array
     }
 
     const indexNewTags = this.newTags.indexOf(tag);
 
     if (indexNewTags >= 0) {
-      this.newTags.splice(index, 1);
+      this.newTags.splice(index, 1); // Removes element from array
     }
   }
 

@@ -16,6 +16,9 @@ export class VideoService {
 
   private URL: string = environment.backendUrl + "/videos";
 
+  // const tagsJson = JSON.stringify(this.searchTags.value);
+  // const tagsEncoded = encodeURIComponent(tagsJson);
+
   constructor(private userService: UserService, private http: HttpClient) {
     this.refreshVideos();
   }

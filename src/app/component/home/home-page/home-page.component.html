@@ -1,30 +1,35 @@
-<div class="search-tags">
-  <mat-chip-grid #chipGrid>
-    <mat-chip-row *ngFor="let tag of searchTags" (removed)="removeTag(tag)">
-      {{tag.text}}
-      <button matChipRemove>
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </mat-chip-row>
-  </mat-chip-grid>
-</div>
+<div style="margin: auto">
+  <div class="search-tags">
+    <mat-chip-grid #chipGrid>
+      <mat-chip-row *ngFor="let tag of searchTags" (removed)="removeTag(tag)">
+        {{tag.text}}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    </mat-chip-grid>
 
-<div>
-  <app-video-editor (savedVideoEvent)="onFinishedEditingVideoEvent($event)" *ngIf="editingVideo"></app-video-editor>
-</div>
+    <!-- This invisible input is needed to prevent errors, the chip grid wants a chip input -->
+    <input #tagInput style="display: none" [matChipInputFor]="chipGrid"/>
+  </div>
 
-<button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video">
-  <mat-icon>add</mat-icon>
-</button>
+  <div>
+    <app-video-editor (savedVideoEvent)="onFinishedEditingVideoEvent($event)" *ngIf="editingVideo"></app-video-editor>
+  </div>
 
-<p>
-  <mat-error>{{error}}</mat-error>
-</p>
+  <button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video">
+    <mat-icon>add</mat-icon>
+  </button>
 
-<div class="videos-container">
-  <app-video class="video" *ngFor="let video of videos" [video]="video"></app-video>
-</div>
+  <p>
+    <mat-error>{{error}}</mat-error>
+  </p>
 
-<div class="overlay" *ngIf="editingVideo" (click)="editingVideo = !editingVideo">
+  <div class="videos-container">
+    <app-video class="video" *ngFor="let video of videos" [video]="video"></app-video>
+  </div>
+
+  <div class="overlay" *ngIf="editingVideo" (click)="editingVideo = !editingVideo">
+  </div>
 
 </div>

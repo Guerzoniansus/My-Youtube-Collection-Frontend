@@ -5,6 +5,7 @@ import {VideoService} from "../../../service/video.service";
 import {Video} from "../../../model/Video";
 import {SearchService} from "../../../service/search.service";
 import {Tag} from "../../../model/Tag";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-home-page',
@@ -17,7 +18,6 @@ export class HomePageComponent implements OnInit {
   public videos: Video[] = [];
   public error: string = "";
 
-  public searchQuery: string = "";
   public searchTags: Tag[] = [];
 
   constructor(private userService: UserService, private router: Router, private videoService: VideoService,
@@ -34,7 +34,6 @@ export class HomePageComponent implements OnInit {
       error: () => this.error = "An error occured, videos could not be retrieved."
     })
 
-    this.searchService.getSearchQuery().subscribe(searchQuery => this.searchQuery = searchQuery);
     this.searchService.getSearchTags().subscribe(searchTags => this.searchTags = searchTags);
   }
 
@@ -58,4 +57,6 @@ export class HomePageComponent implements OnInit {
   removeTag(tag: Tag): void {
     this.searchService.removeSearchTag(tag);
   }
+
+  protected readonly environment = environment;
 }

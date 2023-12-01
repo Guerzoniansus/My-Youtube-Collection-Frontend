@@ -70,6 +70,6 @@ export class SearchBarComponent implements OnInit {
    * Fired when the user presses enter on the search bar.
    */
   pressedEnter(input: string) {
-    this.searchService.updateSearchQuery(input);
+    this.searchService.setSearchQuery(input);
   }
 }
