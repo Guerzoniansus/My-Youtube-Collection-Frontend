@@ -13,14 +13,14 @@ import {SearchFilter} from "../model/SearchFilter";
 })
 export class SearchService {
 
-  /** The search text that the user typed in. An empty string will get all video's. */
-  private searchQuery: BehaviorSubject<string> = new BehaviorSubject<string>("");
-  /** The tags the user wants to search for. */
-  private searchTags: BehaviorSubject<Tag[]> = new BehaviorSubject<Tag[]>([]);
+  // /** The search text that the user typed in. An empty string will get all video's. */
+  // private searchQuery: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  // /** The tags the user wants to search for. */
+  // private searchTags: BehaviorSubject<Tag[]> = new BehaviorSubject<Tag[]>([]);
+
 
   private filter = new SearchFilter();
   private filterSubject: BehaviorSubject<SearchFilter> = new BehaviorSubject<SearchFilter>(this.filter);
-
 
   /**
    * All tags in the user's account to convert from IDs.
@@ -37,24 +37,33 @@ export class SearchService {
       this.tagService.getTags()
     ]).pipe(
       map(([params, userTags]) => {
-        alert("params");
         this.userTags = userTags;
         const tagIDs= params.get("tagIDs") == null ? [] : params.get("tagIDs")!.split(",");
         const tags: Tag[] = tagIDs ? this.convertTagIDsToTags(tagIDs) : [];
-        const query = params.get("q") == null ? "" : params.get("q")!;
+        const query = params.get("q") == null ? null : params.get("q")!;
 
-        this.searchTags.next(tags);
-        this.searchQuery.next(query);
+        this.filter.tags = tags;
+        this.filter.query = query;
         this.applySearch();
       })
     ).subscribe();
   }
 
   /**
-   * Gets the current search query.
+   * Returns an observable for the currently active search filter.
+   * Do not edit the values inside the filter directly. Use this service instead.
    */
-  getSearchQuery(): BehaviorSubject<string> {
-    return this.searchQuery;
+  getSearchFilter(): BehaviorSubject<SearchFilter> {
+    return this.filterSubject;
+  }
+
+  /**
+   * Updates the URL and refreshes the user's video's based on the current search criteria.
+   */
+  applySearch() {
+    this.filterSubject.next(this.filter);
+    this.updateUrl();
+    // TODO
   }
 
   /**
@@ -70,33 +79,26 @@ export class SearchService {
    * @param query The new search query. Use an empty string if the user should get all video's.
    */
   setSearchQuery(query: string): void {
-    this.searchQuery.next(query);
+    this.filter.query = query;
     this.applySearch();
   }
 
   /**
-   * Gets the tags that are currently being searched for.
-   */
-  getSearchTags(): BehaviorSubject<Tag[]> {
-    return this.searchTags;
-  }
-
-  /**
-   * Adds the given tags to the search query.
+   * Adds the given tags to the search query and fires off a new search action.
    * @param tags The tags to search for.
    */
   addSearchTags(tags: Tag[]): void {
-    const updatedTags: Tag[] = tags ?  [...this.searchTags.value, ...tags] : [];
-    this.searchTags.next(updatedTags);
+    this.filter.addTags(tags)
     this.applySearch();
   }
 
   /**
-   * Adds a tag to the search query.
+   * Adds a tag to the search query and fires off a new search action.
    * @param tag The tag to search for.
    */
   addSearchTag(tag: Tag): void {
-    this.addSearchTags([tag]);
+    this.filter.addTag(tag);
+    this.applySearch();
   }
 
   /**
@@ -104,33 +106,34 @@ export class SearchService {
    * @param tag The tag to remove.
    */
   removeSearchTag(tag: Tag) : void {
-    const newTags: Tag[] = this.searchTags.value.filter(x => x !== tag);
-    this.searchTags.next(newTags);
+    this.filter.removeTag(tag);
     this.applySearch()
   }
 
+  /**
+   * Clears all filter parameters from the search filter and fires off a new search action.
+   */
   clear() {
-    this.searchTags.next([]);
-    this.searchQuery.next("");
+    this.filter.clear();
     this.applySearch();
+  }
+
+  /**
+   * Creates an URL of the home page that contains the current search options as parameters for easy bookmarking.
+   */
+  createUrl(): string {
+    const tagIDs = this.convertTagsToStringOfTagIDs(this.filter.tags);
+    const query = this.filter.query;
+    return this.router.createUrlTree(["/home"], { queryParams: { q: query, tagIDs: tagIDs}}).toString();
   }
 
   /**
    * Updates the URL based on the current search query and tags.
    */
   private updateUrl() {
-    const tagIDs = this.convertTagsToUrlParameter(this.searchTags.value);
-    const query = this.searchQuery.value ? this.searchQuery.value : null;
-    const url = this.router.createUrlTree(["/home"], { queryParams: { q: query, tagIDs: tagIDs}}).toString();
-    this.location.go(url); // Using this instead of router.navigate in order to not trigger the URL change subscribed event
-  }
-
-  /**
-   * Updates the URL and refreshes the user's video's based on the current search criteria.
-   */
-  applySearch() {
-    this.updateUrl();
-    // TODO
+    // Using location.go instead of router.navigate in order to not trigger the URL change subscribed event
+    // that the constructor listens to
+    this.location.go(this.createUrl());
   }
 
   /**
@@ -138,7 +141,7 @@ export class SearchService {
    * @param tags The list of tags to convert.
    * @private
    */
-  private convertTagsToUrlParameter(tags: Tag[]): string | null {
+  private convertTagsToStringOfTagIDs(tags: Tag[]): string | null {
     return tags.length == 0 ? null : tags.map(tag => tag.tagID).join(',');
   }
 }

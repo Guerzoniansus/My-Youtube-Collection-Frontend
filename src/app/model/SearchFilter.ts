@@ -1,39 +1,50 @@
 import {Tag} from "./Tag";
 import {Router} from "@angular/router";
+import {removeElementFromArray} from "../utils/RemoveElementFromArray";
 
 export class SearchFilter {
-  private _query: string = "";
+  private _query: string | null = "";
   private _tags: Tag[] = [];
 
-  public clear() {
+  /**
+   * Resets  all search parameters of this filter back to their default values (such as empty or null).
+   */
+  clear() {
     this.query = "";
     this.tags = [];
   }
 
   /**
-   * Converts tags to a comma separated list of tag IDs like "5,6,7".
-   * Returns null if there are no tags to convert.
+   * Adds the given tags to the search query.
+   * @param tags The tags to search for.
    */
-  public convertTagsToStringOfTagIDs(): string | null {
-    return this.tags.length == 0 ? null : this.tags.map(tag => tag.tagID).join(',');
+  addTags(tags: Tag[]): void {
+    this.tags = [...this.tags, ...tags];
   }
 
   /**
-   * Creates an URL of the home page that contains the current search options as parameters for easy bookmarking.
-   * @param router A Router object that is needed to create the url.
+   * Adds a tag to the search query.
+   * @param tag The tag to search for.
    */
-  public createUrlFrontend(router: Router): string {
-    const tagIDs = this.convertTagsToStringOfTagIDs();
-    const query = this.query ? this.query : null;
-    return router.createUrlTree(["/home"], { queryParams: { q: query, tagIDs: tagIDs}}).toString();
+  addTag(tag: Tag): void {
+    this.addTags([tag]);
   }
 
-  get query(): string {
+  /**
+   * Removes a tag from the search query.
+   * @param tag The tag to remove.
+   */
+  removeTag(tag: Tag) : void {
+    this.tags = removeElementFromArray(tag, this.tags);
+  }
+
+  get query(): string | null {
     return this._query;
   }
 
-  set query(value: string) {
-    this._query = value;
+  set query(query: string | null) {
+    // Set empty string to null
+    query ? this._query = query : this._query = null;
   }
 
   get tags(): Tag[] {

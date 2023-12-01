@@ -6,6 +6,7 @@ import {Video} from "../../../model/Video";
 import {SearchService} from "../../../service/search.service";
 import {Tag} from "../../../model/Tag";
 import {environment} from "../../../../environments/environment";
+import {SearchFilter} from "../../../model/SearchFilter";
 
 @Component({
   selector: 'app-home-page',
@@ -18,7 +19,7 @@ export class HomePageComponent implements OnInit {
   public videos: Video[] = [];
   public error: string = "";
 
-  public searchTags: Tag[] = [];
+  public filter!: SearchFilter;
 
   constructor(private userService: UserService, private router: Router, private videoService: VideoService,
               private searchService: SearchService) {}
@@ -26,6 +27,7 @@ export class HomePageComponent implements OnInit {
   ngOnInit() {
     if (this.userService.isLoggedIn() == false) {
       this.router.navigate(["/login"]);
+      return;
     }
 
     this.videoService.getVideos().subscribe({
@@ -34,7 +36,7 @@ export class HomePageComponent implements OnInit {
       error: () => this.error = "An error occured, videos could not be retrieved."
     })
 
-    this.searchService.getSearchTags().subscribe(searchTags => this.searchTags = searchTags);
+    this.searchService.getSearchFilter().subscribe(filter => this.filter = filter);
   }
 
   /** Event that gets fired when the user clicks on the add video button. */
@@ -57,6 +59,4 @@ export class HomePageComponent implements OnInit {
   removeTag(tag: Tag): void {
     this.searchService.removeSearchTag(tag);
   }
-
-  protected readonly environment = environment;
 }

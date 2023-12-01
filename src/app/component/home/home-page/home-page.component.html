@@ -1,7 +1,7 @@
 <div style="margin: auto">
   <div class="search-tags">
     <mat-chip-grid #chipGrid>
-      <mat-chip-row *ngFor="let tag of searchTags" (removed)="removeTag(tag)">
+      <mat-chip-row *ngFor="let tag of filter.tags" (removed)="removeTag(tag)">
         {{tag.text}}
         <button matChipRemove>
           <mat-icon>cancel</mat-icon>

@@ -44,7 +44,7 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit() {
     this.tagService.getTags().subscribe(tags => this.userTags = tags);
-    this.searchService.getSearchTags().subscribe(tags => this.selectedTags = tags);
+    this.searchService.getSearchFilter().subscribe(filter => this.selectedTags = filter.tags);
   }
 
   /**
