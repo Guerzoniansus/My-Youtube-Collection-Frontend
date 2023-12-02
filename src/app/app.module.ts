@@ -24,6 +24,7 @@ import { VideoComponent } from './component/home/video/video.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { SearchBarComponent } from './component/search-bar/search-bar.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {AlphabeticalPipe} from "./utils/AlphabeticalPipe";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     LoginComponent,
     VideoEditorComponent,
     VideoComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    AlphabeticalPipe
   ],
     imports: [
         BrowserModule,

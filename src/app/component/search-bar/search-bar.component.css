@@ -7,8 +7,15 @@
 
 .input-field {
   width: 50%;
-  height: 30px !important;
+  height: 25px !important;
   align-self: center;
   padding: 0;
   margin: 0;
+  position: absolute;
+  top: 3px;
+  background-color: white;
+}
+
+/deep/ .mat-mdc-text-field-wrapper {
+  background-color: white;
 }

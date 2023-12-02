@@ -20,8 +20,10 @@ export class VideoComponent implements OnInit {
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
   }
 
-  getVideoUrl(): SafeResourceUrl {
-    const videoUrl = `https://www.youtube.com/embed/${this.video?.videoCode}`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+  /**
+   * Returns a list with each text of all tags.
+   */
+  getAllTagsText(): string[] {
+    return this.video!.tags!.map(tag => tag.text);
   }
 }

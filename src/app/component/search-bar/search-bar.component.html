@@ -1,10 +1,11 @@
 <mat-form-field class="input-field">
+  <!-- Style: display none, because Home Component shows the tags -->
   <mat-chip-grid #chipGrid style="display: none">
     <mat-chip-row *ngFor="let tag of selectedTags">
     </mat-chip-row>
   </mat-chip-grid>
 
-  <input #tagInput [formControl]="tagInputElement"
+  <input #tagInput [formControl]="tagInputElement" placeholder="Search by title or tags"
          [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
          (matChipInputTokenEnd)="pressedEnter($event.value)"/>

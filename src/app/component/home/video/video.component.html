@@ -5,7 +5,7 @@
     </iframe>
   </div>
   <mat-chip-listbox class="tags">
-    <mat-chip *ngFor="let tag of video?.tags">{{tag.text}}</mat-chip>
+    <mat-chip *ngFor="let text of getAllTagsText() | alphabetical">{{text}}</mat-chip>
   </mat-chip-listbox>
   <p class="video-info-row">{{video?.title}}</p>
   <p class="video-info-row video-text">{{video?.alternativeTitle}}</p>

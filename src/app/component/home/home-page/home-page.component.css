@@ -15,6 +15,7 @@
 }
 
 .videos-container {
+  margin-left: 20px;
   display: flex;
   flex-direction: row;
   justify-content: left;
