@@ -23,6 +23,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { VideoComponent } from './component/home/video/video.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { SearchBarComponent } from './component/search-bar/search-bar.component';
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -34,24 +35,25 @@ import { SearchBarComponent } from './component/search-bar/search-bar.component'
     VideoComponent,
     SearchBarComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    HttpClientModule,
-    AppRoutingModule,
-    GoogleSigninButtonModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatAutocompleteModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatTooltipModule,
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        HttpClientModule,
+        AppRoutingModule,
+        GoogleSigninButtonModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatAutocompleteModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatTooltipModule,
+        MatPaginatorModule,
+    ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {

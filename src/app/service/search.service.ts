@@ -138,6 +138,24 @@ export class SearchService {
   }
 
   /**
+   * Sets the page size for the search filter.
+   * @param pageSize The page size.
+   */
+  setPageSize(pageSize: number): void {
+    this.filter.pageSize = pageSize;
+    this.applySearch();
+  }
+
+  /**
+   * Sets the page size for the search filter.
+   * @param pageNumber The page number, starting from 0.
+   */
+  setPageNumber(pageNumber: number): void {
+    this.filter.page = pageNumber;
+    this.applySearch();
+  }
+
+  /**
    * Updates the URL based on the current search query and tags.
    */
   private updateUrl() {

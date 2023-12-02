@@ -16,10 +16,11 @@ export class VideoService {
   private videosSubject: BehaviorSubject<Video[]> = new BehaviorSubject<Video[]>([]);
   private videos: Observable<Video[]> = this.videosSubject.asObservable();
 
-  private totalNumberOfVideos: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private totalNumberOfVideosSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private totalNumberOfVideos: Observable<number> = this.totalNumberOfVideosSubject.asObservable();
 
   private URL: string = environment.backendUrl + "/videos";
-  private CREATE_URL: string = URL + "/create"
+  private CREATE_URL: string = this.URL + "/create"
 
   private searchFilter?: SearchFilter;
 
@@ -34,6 +35,10 @@ export class VideoService {
     return this.videos;
   }
 
+  public getTotalNumberOfVideos():Observable<number> {
+    return this.totalNumberOfVideos;
+  }
+
   public refreshVideos(): void {
     this.http.post<VideoResponse>(this.URL, this.searchFilter?.getSearchFilterDTO(), this.createHttpOption()).pipe(
       catchError(error => {
@@ -42,7 +47,7 @@ export class VideoService {
       })
     ).subscribe(response => {
       this.videosSubject.next(response.videos ? response.videos : []);
-      this.totalNumberOfVideos.next(response.totalVideos);
+      this.totalNumberOfVideosSubject.next(response.totalVideos);
     });
   }
 

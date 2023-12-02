@@ -1,4 +1,5 @@
 <div style="margin: auto">
+  <p>{{numberOfVideos}} videos found.</p>
   <div class="search-tags">
     <mat-chip-grid #chipGrid>
       <mat-chip-row *ngFor="let tag of filter.tags" (removed)="removeTag(tag)">
@@ -23,11 +24,18 @@
 
   <p><mat-error>{{error}}</mat-error></p>
 
-
-
   <div class="videos-container">
     <app-video class="video" *ngFor="let video of videos" [video]="video"></app-video>
   </div>
+
+  <br><br>
+  <mat-paginator (page)="handlePageEvent($event)"
+                 [length]="numberOfVideos"
+                 [pageSize]="filter.pageSize"
+                 [pageSizeOptions]="[8, 16, 32]"
+                 [showFirstLastButtons]="true"
+                 aria-label="Select page">
+  </mat-paginator>
 
   <div class="overlay" *ngIf="editingVideo" (click)="editingVideo = !editingVideo">
   </div>
