@@ -42,7 +42,7 @@ export class LoginComponent {
         this.error = "";
         this.userService.login(jwt);
         this.connectingToBackend = false;
-        this.router.navigate(["home"]);
+        this.router.navigate(["home"]).then(() => window.location.reload());
       },
       error: error => {
         this.connectingToBackend = false;

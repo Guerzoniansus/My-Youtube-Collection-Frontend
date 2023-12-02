@@ -41,7 +41,7 @@ export class HomePageComponent implements OnInit {
 
   /** Event that gets fired when the user clicks on the add video button. */
   addVideo() {
-    this.editingVideo = !this.editingVideo;
+    this.editingVideo = true;
   }
 
   /**
@@ -51,7 +51,7 @@ export class HomePageComponent implements OnInit {
   onFinishedEditingVideoEvent(message: string) {
     this.editingVideo = false;
 
-    if (message == "Saved video") {
+    if (message == "Saved video" && this.searchService.isSearching() == false) {
       this.videoService.refreshVideos();
     }
   }

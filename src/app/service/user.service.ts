@@ -51,9 +51,10 @@ export class UserService {
    * Creates a HTTP option that includes the JWT token for authentication.
    */
   public getAuthorizationHeader(): HttpHeaders {
+    const jwt = this.getJwt();
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + this.getJwt()
+      'Authorization': "Bearer " + jwt
     });
   }
 
