@@ -14,7 +14,7 @@ jobs:
      - name: Install Dependencies
        run: npm ci
      - name: Run Unit Tests
-       run: npm run test
+       run: npm run test -- --browsers=ChromeHeadless --watch=false --code-coverage
 
  build:
    needs: test
