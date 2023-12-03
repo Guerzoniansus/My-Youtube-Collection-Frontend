@@ -1,11 +1,3 @@
-.tags {
-  overflow: hidden;
-}
-
-.tags:hover {
-  overflow-x: scroll;
-}
-
 .video-info-row {
   margin-top: 2px;
   margin-bottom: 2px;
