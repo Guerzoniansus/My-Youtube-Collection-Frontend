@@ -1,0 +1,43 @@
+name: Angular CI
+
+on: push
+
+jobs:
+ test:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v3
+     - name: Use Node.js
+       uses: actions/setup-node@v3
+       with:
+         node-version: '18'
+     - name: Install Dependencies
+       run: npm ci
+     - name: Run Unit Tests
+       run: npm run test
+
+ build:
+   needs: test
+   runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       node-version: [18]
+       build-env: ['main', 'develop']
+   steps:
+     - uses: actions/checkout@v3
+     - name: Use Node.js
+       uses: actions/setup-node@v3
+       with:
+         node-version: ${{ matrix.node-version }}
+     - name: Build
+       run: |
+         if [[ "${{ matrix.build-env }}" == "main" ]]; then
+           npm run build -- --configuration=production
+         else
+           npm run build
+         fi
+     - name: Archive Production Artifacts
+       uses: actions/upload-artifact@v3
+       with:
+         name: dist-${{ matrix.build-env }}
+         path: ./dist/*
