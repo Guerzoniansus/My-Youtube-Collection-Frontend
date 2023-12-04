@@ -4,11 +4,12 @@ import {removeElementFromArray} from "../utils/RemoveElementFromArray";
 import {query} from "@angular/animations";
 
 export class SearchFilter {
-  private readonly DEFAULT_PAGE_SIZE: number = 8;
+  public readonly DEFAULT_PAGE_SIZE: number = 8;
+  public readonly DEFAULT_PAGE: number = 0;
 
   private _query: string = "";
   private _tags: Tag[] = [];
-  private _page: number = 0;
+  private _page: number = this.DEFAULT_PAGE;
   private _pageSize: number = this.DEFAULT_PAGE_SIZE;
 
   /**

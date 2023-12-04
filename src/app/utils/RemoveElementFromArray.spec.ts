@@ -1,6 +1,6 @@
 import { removeElementFromArray } from './RemoveElementFromArray';
 
-fdescribe('removeElementFromArray', () => {
+describe('removeElementFromArray', () => {
   it('should remove a number from an array of numbers', () => {
     const array = [1, 2, 3, 2];
     const element = 2;

@@ -30,6 +30,7 @@
 
   <br><br>
   <mat-paginator (page)="handlePageEvent($event)"
+                 [pageIndex]="filter.page"
                  [length]="numberOfVideos"
                  [pageSize]="filter.pageSize"
                  [pageSizeOptions]="[8, 16, 32]"
