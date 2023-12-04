@@ -11,35 +11,47 @@ jobs:
        uses: actions/setup-node@v3
        with:
          node-version: '18'
+     - name: Install Angular CLI
+       run: npm install -g @angular/cli@16.2.6
      - name: Install Dependencies
        run: npm ci
      - name: Run Unit Tests
        run: npm run test -- --browsers=ChromeHeadless --watch=false --code-coverage
-
- build:
+ build-prod:
+   if: github.ref == 'refs/heads/main'
    needs: test
    runs-on: ubuntu-latest
-   strategy:
-     matrix:
-       node-version: [18]
-       build-env: ['main', 'develop']
    steps:
      - uses: actions/checkout@v3
      - name: Use Node.js
        uses: actions/setup-node@v3
        with:
-         node-version: ${{ matrix.node-version }}
+         node-version: 18
      - name: Install Angular CLI
-       run: npm install -g @angular/cli
+       run: npm install -g @angular/cli@16.2.6
      - name: Build
-       run: |
-         if [[ "${{ matrix.build-env }}" == "main" ]]; then
-           npm run build -- --configuration=production
-         else
-           npm run build
-         fi
+       run: npm run build -- --configuration=production
      - name: Archive Production Artifacts
        uses: actions/upload-artifact@v3
        with:
-         name: dist-${{ matrix.build-env }}
+         name: my-yt-collection-frontend
+         path: ./dist/*
+ build-dev:
+   if: github.ref == 'refs/heads/develop'
+   needs: test
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v3
+     - name: Use Node.js
+       uses: actions/setup-node@v3
+       with:
+         node-version: 18
+     - name: Install Angular CLI
+       run: npm install -g @angular/cli@16.2.6
+     - name: Build
+       run: npm run build
+     - name: Archive Production Artifacts
+       uses: actions/upload-artifact@v3
+       with:
+         name: my-yt-collection-frontend
          path: ./dist/*
