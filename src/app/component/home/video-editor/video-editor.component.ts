@@ -190,7 +190,7 @@ export class VideoEditorComponent implements OnInit {
 
     // Save new tags to database and add them to video so we don't send tags without IDs
     else {
-      this.tagService.saveTags(this.newTags).subscribe({
+      this.tagService.createAndSaveTags(this.newTags).subscribe({
         next: (tagsSavedToDatabase) => {
           const videoTags: Tag[] = [
             ...this.selectedTags.filter(tag => tag.tagID),

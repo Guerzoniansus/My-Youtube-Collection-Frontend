@@ -48,6 +48,13 @@ export class UserService {
   }
 
   /**
+   * Creates a HTTP option for requests. It includes a header for authorization.
+   */
+  public createHttpOptionsWithAuthHeader(): {headers: HttpHeaders} {
+    return {headers: this.getAuthorizationHeader()};
+  }
+
+  /**
    * Creates a HTTP option that includes the JWT token for authentication.
    */
   public getAuthorizationHeader(): HttpHeaders {

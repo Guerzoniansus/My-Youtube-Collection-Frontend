@@ -12,27 +12,34 @@ import {environment} from "../../environments/environment";
 })
 export class TagService {
 
-  private tagsSubject: BehaviorSubject<Tag[]> = new BehaviorSubject<Tag[]>([]);
-  private tags: Observable<Tag[]> = this.tagsSubject.asObservable();
+  private tags$: BehaviorSubject<Tag[]> = new BehaviorSubject<Tag[]>([]);
 
-  private URL: string = environment.backendUrl + "/tags";
+  private readonly URL: string = environment.backendUrl + "/tags";
 
   constructor(private userService: UserService, private http: HttpClient) {
-    this.http.get<Tag[]>(this.URL, this.createHttpOption()).subscribe((tags) => this.tagsSubject.next(tags));
+    this.http.get<Tag[]>(this.URL, this.userService.createHttpOptionsWithAuthHeader())
+      .subscribe((tags) => this.tags$.next(tags));
   }
 
+  /**
+   * Gets all tags from the user that are currently loaded.
+   */
   getTags(): Observable<Tag[]> {
-    return this.tags;
+    return this.tags$.asObservable();
   }
 
-  saveTags(tags: Tag[]): Observable<Tag[]> {
+  /**
+   * Saves a list of new tags to the user's account in the database.
+   * @param tags
+   */
+  createAndSaveTags(tags: Tag[]): Observable<Tag[]> {
     // The shareReplay pipe shares the result with another subscriber
-    const request = this.http.post<Tag[]>(this.URL, tags, this.createHttpOption()).pipe(shareReplay(1));
-    request.subscribe((tagsSavedToDatabase) => this.tagsSubject.next([...this.tagsSubject.value, ...tagsSavedToDatabase]));
-    return request;
-  }
+    const request = this.http.post<Tag[]>(
+      this.URL,
+      tags,
+      this.userService.createHttpOptionsWithAuthHeader()).pipe(shareReplay(1));
 
-  private createHttpOption() {
-    return {headers: this.userService.getAuthorizationHeader()};
+    request.subscribe((tagsSavedToDatabase) => this.tags$.next([...this.tags$.value, ...tagsSavedToDatabase]));
+    return request;
   }
 }

@@ -36,7 +36,7 @@ describe('SearchService', () => {
         query: null,
         tags: [],
         page: 0,
-        pageSize: SearchService.DEFAULT_PAGE_SIZE
+        pageSize: service.DEFAULT_PAGE_SIZE
       });
       done();
     });

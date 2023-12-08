@@ -11,7 +11,7 @@
     providedIn: 'root'
   })
   export class SearchService {
-    public static readonly DEFAULT_PAGE_SIZE: number = 8;
+    public readonly DEFAULT_PAGE_SIZE: number = 8;
 
     /**
      * All tags in the user's account to convert from IDs.
@@ -23,7 +23,7 @@
       query: null,
       tags: [],
       page: 0,
-      pageSize: SearchService.DEFAULT_PAGE_SIZE
+      pageSize: this.DEFAULT_PAGE_SIZE
     });
 
     constructor(private route: ActivatedRoute, private router: Router, private tagService: TagService, private location: Location) {
@@ -43,7 +43,7 @@
             const tags: Tag[] = tagIDs ? this.convertTagIDsToTags(tagIDs) : [];
             const query = params.get("q") || null;
             const page = params.get("page") == null ? 0 : Number.parseInt(params.get("page")!);
-            const pageSize = params.get("pageSize") == null ? SearchService.DEFAULT_PAGE_SIZE : Number.parseInt(params.get("pageSize")!);
+            const pageSize = params.get("pageSize") == null ? this.DEFAULT_PAGE_SIZE : Number.parseInt(params.get("pageSize")!);
 
             this.filter = {query: query, tags: tags, page: page, pageSize: pageSize};
           }
@@ -117,7 +117,7 @@
       const tagIDs = this.convertTagsToStringOfTagIDs(this.filter.tags);
       const query = this.filter.query || null;
       const page = this.filter.page || null;
-      const pageSize = this.filter.pageSize == SearchService.DEFAULT_PAGE_SIZE ? null : this.filter.pageSize;
+      const pageSize = this.filter.pageSize == this.DEFAULT_PAGE_SIZE ? null : this.filter.pageSize;
 
       return this.router.createUrlTree(["/home"], { queryParams: {
           q: query,
@@ -144,7 +144,7 @@
         query: null,
         tags: [],
         page: 0,
-        pageSize: SearchService.DEFAULT_PAGE_SIZE
+        pageSize: this.DEFAULT_PAGE_SIZE
       };
     }
 
