@@ -70,7 +70,7 @@ export class HomePageComponent implements OnInit {
     }
 
     else if (event.pageIndex != this.filter.page) {
-      this.searchService.setPageNumber(event.pageIndex);
+      this.searchService.setPage(event.pageIndex);
     }
   }
 }

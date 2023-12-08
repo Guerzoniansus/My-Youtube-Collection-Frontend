@@ -21,14 +21,14 @@ export class TagService {
     this.http.get<Tag[]>(this.URL, this.createHttpOption()).subscribe((tags) => this.tagsSubject.next(tags));
   }
 
-  public getTags(): Observable<Tag[]> {
+  getTags(): Observable<Tag[]> {
     return this.tags;
   }
 
-  public saveTags(tags: Tag[]): Observable<Tag[]> {
+  saveTags(tags: Tag[]): Observable<Tag[]> {
     // The shareReplay pipe shares the result with another subscriber
     const request = this.http.post<Tag[]>(this.URL, tags, this.createHttpOption()).pipe(shareReplay(1));
-    request.subscribe((tagsSavedToDatabase) => this.tagsSubject.next(tagsSavedToDatabase));
+    request.subscribe((tagsSavedToDatabase) => this.tagsSubject.next([...this.tagsSubject.value, ...tagsSavedToDatabase]));
     return request;
   }
 

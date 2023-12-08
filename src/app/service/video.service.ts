@@ -40,7 +40,7 @@ export class VideoService {
   }
 
   public refreshVideos(): void {
-    this.http.post<VideoResponse>(this.URL, this.searchFilter?.getSearchFilterDTO(), this.createHttpOption()).pipe(
+    this.http.post<VideoResponse>(this.URL, this.searchFilter, this.createHttpOption()).pipe(
       catchError(error => {
         console.error('An error occurred while fetching videos:', error);
         return throwError(() =>'An error occurred while fetching videos.');
