@@ -1,4 +1,4 @@
-name: Angular CI
+name: Angular
 
 on: push
 
@@ -37,7 +37,7 @@ jobs:
          name: my-yt-collection-frontend
          path: ./dist/*
  build-dev:
-   if: github.ref == 'refs/heads/develop'
+   if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')
    needs: test
    runs-on: ubuntu-latest
    steps:
