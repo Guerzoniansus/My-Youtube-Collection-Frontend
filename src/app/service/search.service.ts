@@ -73,7 +73,7 @@
     /**
      * Returns an observable for the currently active search filter.
      */
-    getSearchFilter(): Observable<SearchFilter> {
+    public getSearchFilter(): Observable<SearchFilter> {
       return this.filter$.asObservable();
     }
 
@@ -81,7 +81,7 @@
      * Returns whether the user is currently searching for something by checking
      * if any search filter parameters differ from their default states.
      */
-    isSearching(): boolean {
+    public isSearching(): boolean {
       if (this.filter.tags.length > 0 || this.filter.query || this.filter.page > 0) {
         return true;
       }
@@ -139,7 +139,7 @@
     /**
      * Resets the search filter back to default state.
      */
-    clear(): void {
+    public clear(): void {
       this.filter = {
         query: null,
         tags: [],
@@ -152,7 +152,7 @@
      * Updates the search query and starts a new search.
      * @param query The new search query. Use an empty string if the user should get all video's.
      */
-    setSearchQuery(query: string): void {
+    public setSearchQuery(query: string): void {
       this.filter = {...this.filter, query: query};
     }
 
@@ -160,7 +160,7 @@
      * Adds a tag to the search query.
      * @param tag The tag to search for.
      */
-    addSearchTag(tag: Tag): void {
+    public addSearchTag(tag: Tag): void {
       const currentTags = this.filter.tags;
       this.filter = {...this.filter, tags: [...currentTags, ...[tag]]};
     }
@@ -169,7 +169,7 @@
      * Removes a tag from the search query.
      * @param tag The tag to remove.
      */
-    removeSearchTag(tag: Tag) : void {
+    public removeSearchTag(tag: Tag) : void {
       const newTags: Tag[] = removeElementFromArray(tag, this.filter.tags);
       this.filter = {...this.filter, tags: newTags};
     }
@@ -178,7 +178,7 @@
      * Sets the page size for the search filter.
      * @param pageSize The page size.
      */
-    setPageSize(pageSize: number): void {
+    public setPageSize(pageSize: number): void {
       this.filter = {...this.filter, pageSize: pageSize};
     }
 
@@ -186,7 +186,7 @@
      * Sets the page for the search filter.
      * @param page The page number, starting from 0.
      */
-    setPage(page: number): void {
+    public setPage(page: number): void {
       this.filter = {...this.filter, page: page};
     }
   }

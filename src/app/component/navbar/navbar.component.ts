@@ -20,7 +20,7 @@ export class NavbarComponent {
   /**
    * Logs out the user. Refreshes the page to make sure it goes correctly.
    */
-  logout() {
+  public logout() {
     this.userService.logout();
     window.location.reload();
   }
@@ -28,15 +28,15 @@ export class NavbarComponent {
   /**
    * Returns whether the user is on the homepage.
    */
-  get isHomePage(): boolean {
+  public isHomePage(): boolean {
     return this.router.url.includes("/home");
   }
 
   /**
    * Event that gets fired when the user clicks on the home button.
    */
-  onHomeButtonClick(): void {
-    if (this.isHomePage) {
+  public onHomeButtonClick(): void {
+    if (this.isHomePage()) {
       this.searchService.clear();
     }
     else this.router.navigate(['/home']);

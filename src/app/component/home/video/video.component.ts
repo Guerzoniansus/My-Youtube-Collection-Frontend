@@ -23,7 +23,7 @@ export class VideoComponent implements OnInit {
   /**
    * Returns a list with each text of all tags.
    */
-  getAllTagsText(): string[] {
+  public getAllTagsText(): string[] {
     return this.video!.tags!.map(tag => tag.text);
   }
 }

@@ -24,7 +24,7 @@ export class TagService {
   /**
    * Gets all tags from the user that are currently loaded.
    */
-  getTags(): Observable<Tag[]> {
+  public getTags(): Observable<Tag[]> {
     return this.tags$.asObservable();
   }
 
@@ -32,7 +32,7 @@ export class TagService {
    * Saves a list of new tags to the user's account in the database.
    * @param tags
    */
-  createAndSaveTags(tags: Tag[]): Observable<Tag[]> {
+  public createAndSaveTags(tags: Tag[]): Observable<Tag[]> {
     // The shareReplay pipe shares the result with another subscriber
     const request = this.http.post<Tag[]>(
       this.URL,

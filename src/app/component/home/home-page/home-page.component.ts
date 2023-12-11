@@ -40,7 +40,7 @@ export class HomePageComponent implements OnInit {
   }
 
   /** Event that gets fired when the user clicks on the add video button. */
-  addVideo() {
+  public addVideo() {
     this.editingVideo = true;
   }
 
@@ -48,7 +48,7 @@ export class HomePageComponent implements OnInit {
    * Event that gets fired when the user closes the video editor window.
    * @param message The event message.
    */
-  onFinishedEditingVideoEvent(message: string) {
+  public onFinishedEditingVideoEvent(message: string) {
     this.editingVideo = false;
 
     if (message == "Saved video" && this.searchService.isSearching() == false) {
@@ -56,7 +56,7 @@ export class HomePageComponent implements OnInit {
     }
   }
 
-  removeTag(tag: Tag): void {
+  public removeTag(tag: Tag): void {
     this.searchService.removeSearchTag(tag);
   }
 
@@ -64,7 +64,7 @@ export class HomePageComponent implements OnInit {
    * Event that gets fired when the paginator gets used.
    * @param event The page event.
    */
-  handlePageEvent(event: PageEvent) {
+  public handlePageEvent(event: PageEvent) {
     if (event.pageSize != this.filter.pageSize) {
       this.searchService.setPageSize(event.pageSize);
     }

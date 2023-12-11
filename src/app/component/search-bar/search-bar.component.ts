@@ -51,7 +51,7 @@ export class SearchBarComponent implements OnInit {
    * Checks if a tag has already been selected.
    * @param tagText The text of the tag.
    */
-  isTagAlreadySelected(tagText: string): boolean {
+  public isTagAlreadySelected(tagText: string): boolean {
     return this.selectedTags.map(tag => tag.text.toLowerCase()).includes(tagText.toLowerCase());
   }
 
@@ -60,7 +60,7 @@ export class SearchBarComponent implements OnInit {
    * Notifies the search service to add the selected tag to the search results.
    * @param tag The tag that was selected.
    */
-  selectedTag(tag: Tag): void {
+  public selectedTag(tag: Tag): void {
     this.searchService.addSearchTag(tag);
     this.tagInput.nativeElement.value = "";
     this.tagInputElement.setValue(null);
@@ -69,7 +69,7 @@ export class SearchBarComponent implements OnInit {
   /**
    * Fired when the user presses enter on the search bar.
    */
-  pressedEnter(input: string) {
+  public pressedEnter(input: string) {
     this.searchService.setSearchQuery(input);
   }
 }

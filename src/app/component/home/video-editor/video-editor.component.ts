@@ -82,7 +82,7 @@ export class VideoEditorComponent implements OnInit {
    * Event that gets fired when a tag gets typed and enter gets pressed
    * @param event
    */
-  addTag(event: MatChipInputEvent): void {
+  public addTag(event: MatChipInputEvent): void {
     const tagText = event.value.trim();
 
     if (tagText && (!this.isTagAlreadySelected(tagText))) {
@@ -103,13 +103,13 @@ export class VideoEditorComponent implements OnInit {
    * Event that gets fired when a tag gets clicked in autocomplete
    * @param tag
    */
-  selectedTag(tag: Tag): void {
+  public selectedTag(tag: Tag): void {
     this.selectedTags!.push(tag);
     this.tagInput.nativeElement.value = "";
     this.tagInputElement.setValue(null);
   }
 
-  removeTag(tag: Tag): void {
+  public removeTag(tag: Tag): void {
     const index = this.selectedTags!.indexOf(tag);
 
     if (index >= 0) {
@@ -123,7 +123,7 @@ export class VideoEditorComponent implements OnInit {
     }
   }
 
-  sanitizeTagText(text: string): string {
+  public sanitizeTagText(text: string): string {
     return text[0].toUpperCase() + text.slice(1).toLowerCase();
   }
 
@@ -131,11 +131,11 @@ export class VideoEditorComponent implements OnInit {
    * Checks if a tag has already been selected
    * @param tagText The text of the tag
    */
-  isTagAlreadySelected(tagText: string): boolean {
+  public isTagAlreadySelected(tagText: string): boolean {
     return this.selectedTags!.map(tag => tag.text.toLowerCase()).includes(tagText.toLowerCase());
   }
 
-  processYoutubeUrl() {
+  public processYoutubeUrl() {
     const code = this.yt.extractCodeFromUrl(this.videoUrl);
 
     if (code != undefined) {
@@ -157,7 +157,7 @@ export class VideoEditorComponent implements OnInit {
     else this.setError("Could not parse this URL.")
   }
 
-  saveAll() {
+  public saveAll() {
     this.isSaving = true;
 
     // We save the tags first, then if any tags were new, save and retrieve them from the backend
@@ -221,7 +221,7 @@ export class VideoEditorComponent implements OnInit {
     );
   }
 
-  finishEditing(message: string): void {
+  public finishEditing(message: string): void {
     this.savedVideoEvent.emit(message);
   }
 
