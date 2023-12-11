@@ -9,8 +9,7 @@ import {fakeAsync, flush, tick} from "@angular/core/testing";
 
 const headers = {headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': "Bearer jwt"}) };
 
-
-fdescribe('VideoService', () => {
+describe('VideoService', () => {
   let service: VideoService;
   let userServiceMock: jasmine.SpyObj<UserService>;
   let searchServiceMock: jasmine.SpyObj<SearchService>;
