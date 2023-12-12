@@ -34,7 +34,7 @@ export class SearchBarComponent implements OnInit {
     this.tagInputElement.valueChanges.subscribe(input => {
       // Create the list of tags that show up in autocomplete
       const filteredTags: Tag[] = this.userTags.filter(tag =>
-        tag.text.toLowerCase().includes(input)
+        tag.text.toLowerCase().includes(input.toLowerCase())
         && (!this.isTagAlreadySelected(input))
       );
 
