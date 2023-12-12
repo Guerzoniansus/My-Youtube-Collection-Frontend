@@ -19,7 +19,7 @@ export class SearchBarComponent implements OnInit {
 
   /** Input field */
   public tagInput = new FormControl();
-  @ViewChild('tagInput') tagInputElement!: ElementRef<HTMLInputElement>;
+  @ViewChild('tagInputElement') tagInputElement!: ElementRef<HTMLInputElement>;
 
   /** Autocomplete results. */
   public autocompleteTags!: Observable<Tag[]>;
@@ -35,7 +35,7 @@ export class SearchBarComponent implements OnInit {
       // Create the list of tags that show up in autocomplete
       const filteredTags: Tag[] = this.userTags.filter(tag =>
         tag.text.toLowerCase().includes(input.toLowerCase()))
-        .filter(tag => !this.isTagAlreadySelected(tag.text));
+        .filter(tag => !this.isTagAlreadySelected(tag.text)); // Without this, user can select the same tag again
 
       this.autocompleteTags = of(filteredTags);
     });
@@ -63,6 +63,7 @@ export class SearchBarComponent implements OnInit {
     this.searchService.addSearchTag(tag);
     this.tagInputElement.nativeElement.value = "";
     this.tagInput.setValue(null);
+    this.autocompleteTags = of([]); // Without this, user can select the same tag again
   }
 
   /**

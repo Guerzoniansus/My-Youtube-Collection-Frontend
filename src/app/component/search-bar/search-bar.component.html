@@ -5,7 +5,7 @@
     </mat-chip-row>
   </mat-chip-grid>
 
-  <input #tagInput [formControl]="tagInput" placeholder="🔎 Search by title, channel or tags"
+  <input #tagInputElement [formControl]="tagInput" placeholder="🔎 Search by title, channel or tags"
          [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
          (matChipInputTokenEnd)="pressedEnter($event.value)"/>

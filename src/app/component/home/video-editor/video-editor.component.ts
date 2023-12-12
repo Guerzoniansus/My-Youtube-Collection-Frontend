@@ -61,7 +61,7 @@ export class VideoEditorComponent implements OnInit {
     this.tagInputElement.valueChanges.subscribe(input => {
       const filteredTags: Tag[] = this.userTags.filter(tag =>
         tag.text.toLowerCase().includes(input.toLowerCase()))
-        .filter(tag => !this.isTagAlreadySelected(tag.text));
+        .filter(tag => !this.isTagAlreadySelected(tag.text)); // Without this, user can select the same tag again
 
       this.autocompleteTags = of(filteredTags);
 
@@ -106,6 +106,7 @@ export class VideoEditorComponent implements OnInit {
     this.selectedTags!.push(tag);
     this.tagInput.nativeElement.value = "";
     this.tagInputElement.setValue(null);
+    this.autocompleteTags = of([]); // Without this, user can select the same tag again
   }
 
   public removeTag(tag: Tag): void {
