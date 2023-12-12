@@ -23,7 +23,7 @@
 
 
       <mat-form-field class="input-field">
-        <mat-label>Select your tags, or a type a name and press enter to create a new one</mat-label>
+        <mat-label>Select your tags, or type a name and press enter to create a new one</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tag selection">
           <mat-chip-row *ngFor="let tag of selectedTags" (removed)="removeTag(tag)">
             {{tag.text}}
