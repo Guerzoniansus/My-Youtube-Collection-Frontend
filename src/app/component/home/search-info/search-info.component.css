@@ -1,0 +1,10 @@
+.query {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.clear {
+  cursor:pointer;
+  color:blue;
+  text-decoration:underline;
+}

@@ -1,0 +1,17 @@
+<p>{{numberOfVideos}} videos found.
+  <span class="clear" *ngIf="filter.query || filter.tags.length > 0" (click)="clearSearch()">Clear search</span>
+</p>
+<p class="query" *ngIf="filter.query">{{filter.query}}</p>
+<div class="search-tags" *ngIf="filter.tags.length > 0">
+  <mat-chip-grid #chipGrid>
+    <mat-chip-row highlighted *ngFor="let tag of filter.tags" (removed)="removeTag(tag)">
+      {{tag.text}}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-row>
+  </mat-chip-grid>
+
+  <!-- This invisible input is needed to prevent errors, the chip grid wants a chip input -->
+  <input #tagInput style="display: none" [matChipInputFor]="chipGrid"/>
+</div>
