@@ -17,12 +17,11 @@ export class HomePageComponent implements OnInit {
 
   public editingVideo: boolean = false;
   public videos: Video[] = [];
-  public numberOfVideos: number = 0;
   public error: string = "";
   public filter!: SearchFilter;
 
-  constructor(private userService: UserService, private router: Router, private videoService: VideoService,
-              private searchService: SearchService) {}
+  constructor(private userService: UserService, private router: Router,
+              private searchService: SearchService, private videoService: VideoService) {}
 
   ngOnInit() {
     if (this.userService.isLoggedIn() == false) {
@@ -35,7 +34,6 @@ export class HomePageComponent implements OnInit {
       error: () => this.error = "An error occured, videos could not be retrieved."
     })
 
-    this.videoService.getTotalNumberOfVideos().subscribe(n => this.numberOfVideos = n);
     this.searchService.getSearchFilter().subscribe(filter => this.filter = filter);
   }
 
@@ -53,24 +51,6 @@ export class HomePageComponent implements OnInit {
 
     if (message == "Saved video" && this.searchService.isSearching() == false) {
       this.videoService.refreshVideos();
-    }
-  }
-
-  public removeTag(tag: Tag): void {
-    this.searchService.removeSearchTag(tag);
-  }
-
-  /**
-   * Event that gets fired when the paginator gets used.
-   * @param event The page event.
-   */
-  public handlePageEvent(event: PageEvent) {
-    if (event.pageSize != this.filter.pageSize) {
-      this.searchService.setPageSize(event.pageSize);
-    }
-
-    else if (event.pageIndex != this.filter.page) {
-      this.searchService.setPage(event.pageIndex);
     }
   }
 }

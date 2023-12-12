@@ -25,6 +25,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import { SearchBarComponent } from './component/search-bar/search-bar.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {AlphabeticalPipe} from "./utils/AlphabeticalPipe";
+import { SearchInfoComponent } from './component/home/search-info/search-info.component';
+import { PaginationComponent } from './component/home/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import {AlphabeticalPipe} from "./utils/AlphabeticalPipe";
     VideoEditorComponent,
     VideoComponent,
     SearchBarComponent,
-    AlphabeticalPipe
+    AlphabeticalPipe,
+    SearchInfoComponent,
+    PaginationComponent
   ],
     imports: [
         BrowserModule,
