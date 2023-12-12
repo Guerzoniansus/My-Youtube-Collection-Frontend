@@ -3,7 +3,7 @@ import {Observable, of, throwError} from "rxjs";
 import {environment} from "../../../environments/environment";
 
 
-fdescribe('LoginFormComponent', () => {
+describe('LoginFormComponent', () => {
   const JWT = "jwt";
 
   let component: LoginComponent;

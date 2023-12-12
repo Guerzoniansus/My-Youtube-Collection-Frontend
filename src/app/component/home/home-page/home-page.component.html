@@ -2,7 +2,7 @@
   <p>{{numberOfVideos}} videos found.</p>
   <div class="search-tags">
     <mat-chip-grid #chipGrid>
-      <mat-chip-row *ngFor="let tag of filter.tags" (removed)="removeTag(tag)">
+      <mat-chip-row highlighted *ngFor="let tag of filter.tags" (removed)="removeTag(tag)">
         {{tag.text}}
         <button matChipRemove>
           <mat-icon>cancel</mat-icon>
@@ -25,7 +25,7 @@
   <p><mat-error>{{error}}</mat-error></p>
 
   <div class="videos-container">
-    <app-video class="video" *ngFor="let video of videos" [video]="video"></app-video>
+    <app-video class="video" *ngFor="let video of videos" [video]="video" [searchTags]="filter.tags"></app-video>
   </div>
 
   <br><br>
