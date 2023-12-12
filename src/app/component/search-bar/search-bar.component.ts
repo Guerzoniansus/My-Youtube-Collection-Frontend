@@ -1,11 +1,9 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SearchService} from "../../service/search.service";
 import {Tag} from "../../model/Tag";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {ENTER} from "@angular/cdk/keycodes";
 import {Observable, of} from "rxjs";
 import {TagService} from "../../service/tag.service";
-import {VideoService} from "../../service/video.service";
-import {YoutubeService} from "../../service/youtube.service";
 import {FormControl} from "@angular/forms";
 
 @Component({
