@@ -3,20 +3,24 @@ import {SearchService} from "../../service/search.service";
 import {TagService} from "../../service/tag.service";
 import {of} from "rxjs";
 import {Tag} from "../../model/Tag";
+import {ElementRef} from "@angular/core";
 
-fdescribe('SearchBarComponent', () => {
+describe('SearchBarComponent', () => {
   let component: SearchBarComponent;
   let searchService: jasmine.SpyObj<SearchService>;
   let tagService: jasmine.SpyObj<TagService>;
+  let tagInputElement: jasmine.SpyObj<ElementRef<HTMLInputElement>>;
 
   beforeEach(() => {
     searchService = jasmine.createSpyObj("SearchService", ["getSearchFilter", "addSearchTag", "setSearchQuery"]);
     tagService = jasmine.createSpyObj("TagService", ["getTags"]);
+    tagInputElement = jasmine.createSpyObj("ElementRef<HTMLInputElement>", ["nativeElement"]);
 
     searchService.getSearchFilter.and.returnValue(of({tags: [], page: 0, pageSize: 8, query: ""}));
     tagService.getTags.and.returnValue(of([]));
 
     component = new SearchBarComponent(searchService, tagService);
+    component.tagInputElement = tagInputElement;
   });
 
   it('should create', () => {
@@ -55,8 +59,8 @@ fdescribe('SearchBarComponent', () => {
     tagService.getTags.and.returnValue(of(tags));
     component.ngOnInit();
 
-    component.tagInputElement.setValue(input);
-    component.tagInputElement.updateValueAndValidity();
+    component.tagInput.setValue(input);
+    component.tagInput.updateValueAndValidity();
 
     component.autocompleteTags.subscribe(tags => {
       expect(tags).toEqual(tags);
@@ -93,8 +97,8 @@ fdescribe('SearchBarComponent', () => {
     searchService.getSearchFilter.and.returnValue(of({ tags: selectedTags, page: 0, pageSize: 8, query: '' }));
     component.ngOnInit();
 
-    component.tagInputElement.setValue(input);
-    component.tagInputElement.updateValueAndValidity();
+    component.tagInput.setValue(input);
+    component.tagInput.updateValueAndValidity();
 
     component.autocompleteTags.subscribe(tags => {
       expect(tags).toEqual(expectedFilteredTags);

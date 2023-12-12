@@ -18,8 +18,8 @@ export class SearchBarComponent implements OnInit {
   public separatorKeysCodes: number[] = [ENTER];
 
   /** Input field */
-  public tagInputElement = new FormControl();
-  @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
+  public tagInput = new FormControl();
+  @ViewChild('tagInput') tagInputElement!: ElementRef<HTMLInputElement>;
 
   /** Autocomplete results. */
   public autocompleteTags!: Observable<Tag[]>;
@@ -31,7 +31,7 @@ export class SearchBarComponent implements OnInit {
   public selectedTags: Tag[] = [];
 
   constructor(private searchService: SearchService, private tagService: TagService) {
-    this.tagInputElement.valueChanges.subscribe(input => {
+    this.tagInput.valueChanges.subscribe(input => {
       // Create the list of tags that show up in autocomplete
       const filteredTags: Tag[] = this.userTags.filter(tag =>
         tag.text.toLowerCase().includes(input.toLowerCase()))
@@ -61,8 +61,8 @@ export class SearchBarComponent implements OnInit {
    */
   public selectedTag(tag: Tag): void {
     this.searchService.addSearchTag(tag);
-    this.tagInput.nativeElement.value = "";
-    this.tagInputElement.setValue(null);
+    this.tagInputElement.nativeElement.value = "";
+    this.tagInput.setValue(null);
   }
 
   /**
