@@ -30,13 +30,12 @@ export class SearchBarComponent implements OnInit {
   /** The selected tags shown in frontend. */
   public selectedTags: Tag[] = [];
 
-  constructor(private searchService: SearchService, private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
+  constructor(private searchService: SearchService, private tagService: TagService) {
     this.tagInputElement.valueChanges.subscribe(input => {
       // Create the list of tags that show up in autocomplete
       const filteredTags: Tag[] = this.userTags.filter(tag =>
-        tag.text.toLowerCase().includes(input.toLowerCase())
-        && (!this.isTagAlreadySelected(input))
-      );
+        tag.text.toLowerCase().includes(input.toLowerCase()))
+        .filter(tag => !this.isTagAlreadySelected(tag.text));
 
       this.autocompleteTags = of(filteredTags);
     });

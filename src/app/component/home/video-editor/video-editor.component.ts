@@ -60,9 +60,8 @@ export class VideoEditorComponent implements OnInit {
   constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
     this.tagInputElement.valueChanges.subscribe(input => {
       const filteredTags: Tag[] = this.userTags.filter(tag =>
-        tag.text.toLowerCase().includes(input.toLowerCase())
-        && (!this.isTagAlreadySelected(input)) // Make sure user can't click same tag multiple times
-      );
+        tag.text.toLowerCase().includes(input.toLowerCase()))
+        .filter(tag => !this.isTagAlreadySelected(tag.text));
 
       this.autocompleteTags = of(filteredTags);
 
