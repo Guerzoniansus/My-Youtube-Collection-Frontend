@@ -45,7 +45,7 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <button (click)="saveAll()" *ngIf="isSaving == false" class="bottom-right" mat-flat-button color="primary">Save</button>
+      <button (click)="saveAll()" *ngIf="isSaving == false" class="bottom-right" mat-flat-button color="primary">Save video</button>
       <mat-spinner class="bottom-right" [diameter]="30" *ngIf="isSaving"></mat-spinner>
     </form>
     <mat-error>{{error}}</mat-error>
