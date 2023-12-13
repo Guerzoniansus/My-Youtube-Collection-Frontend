@@ -78,7 +78,7 @@ export class VideoEditorComponent implements OnInit {
   }
 
   /**
-   * Event that gets fired when a tag gets typed and enter gets pressed
+   * Event that gets fired when a tag gets typed and enter gets pressed.
    * @param event
    */
   public addTag(event: MatChipInputEvent): void {
@@ -140,13 +140,13 @@ export class VideoEditorComponent implements OnInit {
 
     if (code != undefined) {
       this.yt.getVideoInfo(code).subscribe({
-        error: () => this.setError("Could not process this URL."),
+        error: () => this.setError("Could not process this link."),
         next: (data) => {
           this.video.title = data.items[0].snippet.title;
           this.video.channel = data.items[0].snippet.channelTitle;
           this.video.videoCode = code;
           this.videoEmbed.nativeElement.innerHTML = (`<iframe width="368" height="207" src="https://www.youtube.com/embed/${this.video.videoCode}"
-              title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+              title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
         </iframe>`)
           this.validUrl = true;
           this.setError("");
@@ -154,7 +154,7 @@ export class VideoEditorComponent implements OnInit {
       })
     }
 
-    else this.setError("Could not parse this URL.")
+    else this.setError("Could not find a Youtube video with this link.")
   }
 
   public saveAll() {
@@ -182,7 +182,7 @@ export class VideoEditorComponent implements OnInit {
     );
   }
 
-  private saveTags(success: Function, error: Function) {
+  private saveTags(success: Function, errorFn: Function) {
     if (this.newTags.length == 0) {
       this.video.tags = this.selectedTags;
       success();
@@ -201,21 +201,20 @@ export class VideoEditorComponent implements OnInit {
         },
 
         error: (error) => {
-          error();
+          errorFn();
         }
       });
     }
   }
 
-  private saveVideo(success: Function, error: Function) {
+  private saveVideo(success: Function, errorFn: Function) {
     this.isSaving = true;
 
     this.videoService.createVideo(this.video).subscribe(
       {
         complete: () => success(),
         error: (error) => {
-          this.setError("There was an error saving the video, please try again later.")
-          this.isSaving = false;
+          errorFn();
         }
       }
     );
