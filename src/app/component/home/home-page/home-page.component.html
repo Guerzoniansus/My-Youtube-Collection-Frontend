@@ -1,19 +1,25 @@
-<div>
-  <app-video-editor (savedVideoEvent)="onSavedVideoEvent()" *ngIf="editingVideo"></app-video-editor>
-</div>
+<div style="margin: auto">
+  <app-search-info></app-search-info>
 
-<button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video">
-  <mat-icon>add</mat-icon>
-</button>
+  <div>
+    <app-video-editor (savedVideoEvent)="onFinishedEditingVideoEvent($event)" *ngIf="editingVideo"></app-video-editor>
+  </div>
 
-<p>
-  <mat-error>{{error}}</mat-error>
-</p>
+  <button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video">
+    <mat-icon>add</mat-icon>
+  </button>
 
-<div class="videos-container">
-  <app-video class="video" *ngFor="let video of videos" [video]="video"></app-video>
-</div>
+  <p><mat-error>{{error}}</mat-error></p>
 
-<div class="overlay" *ngIf="editingVideo" (click)="editingVideo = !editingVideo">
+  <div class="videos-container">
+    <app-video class="video" *ngFor="let video of videos" [video]="video" [searchTags]="filter.tags"></app-video>
+  </div>
+
+  <br><br>
+
+  <app-pagination></app-pagination>
+
+  <div class="overlay" *ngIf="editingVideo" (click)="editingVideo = !editingVideo">
+  </div>
 
 </div>

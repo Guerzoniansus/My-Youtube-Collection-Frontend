@@ -22,6 +22,11 @@ import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { VideoComponent } from './component/home/video/video.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { SearchBarComponent } from './component/search-bar/search-bar.component';
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {AlphabeticalPipe} from "./utils/AlphabeticalPipe";
+import { SearchInfoComponent } from './component/home/search-info/search-info.component';
+import { PaginationComponent } from './component/home/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -30,26 +35,31 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     HomePageComponent,
     LoginComponent,
     VideoEditorComponent,
-    VideoComponent
+    VideoComponent,
+    SearchBarComponent,
+    AlphabeticalPipe,
+    SearchInfoComponent,
+    PaginationComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    HttpClientModule,
-    AppRoutingModule,
-    GoogleSigninButtonModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatAutocompleteModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatTooltipModule,
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        HttpClientModule,
+        AppRoutingModule,
+        GoogleSigninButtonModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatAutocompleteModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatTooltipModule,
+        MatPaginatorModule,
+    ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {

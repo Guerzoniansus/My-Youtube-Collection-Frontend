@@ -31,12 +31,10 @@ export class VideoEditorComponent implements OnInit {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   /** Input field */
-  public tagCtrl = new FormControl();
+  public tagInputElement = new FormControl();
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
   @ViewChild('videoEmbed') videoEmbed!: ElementRef;
-
-
 
   public video: Video = {
     videoID: undefined,
@@ -51,7 +49,7 @@ export class VideoEditorComponent implements OnInit {
   public userTags: Tag[] = [];
 
   /** Autocomplete results. */
-  public filteredTags!: Observable<Tag[]>;
+  public autocompleteTags!: Observable<Tag[]>;
 
   /** Tags that don't exist in database / userTags yet. */
   public newTags: Tag[] = [];
@@ -60,13 +58,12 @@ export class VideoEditorComponent implements OnInit {
   public selectedTags: Tag[] = [];
 
   constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
-    this.tagCtrl.valueChanges.subscribe(input => {
+    this.tagInputElement.valueChanges.subscribe(input => {
       const filteredTags: Tag[] = this.userTags.filter(tag =>
-        tag.text.toLowerCase().includes(input)
-        && !this.selectedTags!.map(x => x.text).includes(tag.text) // Make sure user can't click same tag multiple times
-      );
+        tag.text.toLowerCase().includes(input.toLowerCase()))
+        .filter(tag => !this.isTagAlreadySelected(tag.text)); // Without this, user can select the same tag again
 
-      this.filteredTags = of(filteredTags);
+      this.autocompleteTags = of(filteredTags);
 
       // If input exists, autosuggests gives no options, and the tag isnt already selected
       if (input && filteredTags.length == 0 && (!this.isTagAlreadySelected(input))) {
@@ -81,10 +78,10 @@ export class VideoEditorComponent implements OnInit {
   }
 
   /**
-   * Event that gets fired when a tag gets typed and enter gets pressed
+   * Event that gets fired when a tag gets typed and enter gets pressed.
    * @param event
    */
-  addTag(event: MatChipInputEvent): void {
+  public addTag(event: MatChipInputEvent): void {
     const tagText = event.value.trim();
 
     if (tagText && (!this.isTagAlreadySelected(tagText))) {
@@ -97,7 +94,7 @@ export class VideoEditorComponent implements OnInit {
       this.newTags.push(newTag);
 
       event.chipInput!.clear();
-      this.tagCtrl.setValue(null);
+      this.tagInputElement.setValue(null);
     }
   }
 
@@ -105,27 +102,28 @@ export class VideoEditorComponent implements OnInit {
    * Event that gets fired when a tag gets clicked in autocomplete
    * @param tag
    */
-  selectedTag(tag: Tag): void {
+  public selectedTag(tag: Tag): void {
     this.selectedTags!.push(tag);
     this.tagInput.nativeElement.value = "";
-    this.tagCtrl.setValue(null);
+    this.tagInputElement.setValue(null);
+    this.autocompleteTags = of([]); // Without this, user can select the same tag again
   }
 
-  removeTag(tag: Tag): void {
+  public removeTag(tag: Tag): void {
     const index = this.selectedTags!.indexOf(tag);
 
     if (index >= 0) {
-      this.selectedTags!.splice(index, 1);
+      this.selectedTags!.splice(index, 1); // Removes element from array
     }
 
     const indexNewTags = this.newTags.indexOf(tag);
 
     if (indexNewTags >= 0) {
-      this.newTags.splice(index, 1);
+      this.newTags.splice(index, 1); // Removes element from array
     }
   }
 
-  sanitizeTagText(text: string): string {
+  public sanitizeTagText(text: string): string {
     return text[0].toUpperCase() + text.slice(1).toLowerCase();
   }
 
@@ -133,22 +131,22 @@ export class VideoEditorComponent implements OnInit {
    * Checks if a tag has already been selected
    * @param tagText The text of the tag
    */
-  isTagAlreadySelected(tagText: string): boolean {
+  public isTagAlreadySelected(tagText: string): boolean {
     return this.selectedTags!.map(tag => tag.text.toLowerCase()).includes(tagText.toLowerCase());
   }
 
-  processYoutubeUrl() {
+  public processYoutubeUrl() {
     const code = this.yt.extractCodeFromUrl(this.videoUrl);
 
     if (code != undefined) {
       this.yt.getVideoInfo(code).subscribe({
-        error: () => this.setError("Could not process this URL."),
+        error: () => this.setError("Could not process this link."),
         next: (data) => {
           this.video.title = data.items[0].snippet.title;
           this.video.channel = data.items[0].snippet.channelTitle;
           this.video.videoCode = code;
           this.videoEmbed.nativeElement.innerHTML = (`<iframe width="368" height="207" src="https://www.youtube.com/embed/${this.video.videoCode}"
-              title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+              title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
         </iframe>`)
           this.validUrl = true;
           this.setError("");
@@ -156,10 +154,10 @@ export class VideoEditorComponent implements OnInit {
       })
     }
 
-    else this.setError("Could not parse this URL.")
+    else this.setError("Could not find a Youtube video with this link.")
   }
 
-  saveAll() {
+  public saveAll() {
     this.isSaving = true;
 
     // We save the tags first, then if any tags were new, save and retrieve them from the backend
@@ -168,7 +166,7 @@ export class VideoEditorComponent implements OnInit {
       () => {
         this.saveVideo(
           () => {
-            this.finishEditing();
+            this.finishEditing("Saved video");
             this.isSaving = false;
           },
           () => {
@@ -184,7 +182,7 @@ export class VideoEditorComponent implements OnInit {
     );
   }
 
-  private saveTags(success: Function, error: Function) {
+  private saveTags(success: Function, errorFn: Function) {
     if (this.newTags.length == 0) {
       this.video.tags = this.selectedTags;
       success();
@@ -192,7 +190,7 @@ export class VideoEditorComponent implements OnInit {
 
     // Save new tags to database and add them to video so we don't send tags without IDs
     else {
-      this.tagService.saveTags(this.newTags).subscribe({
+      this.tagService.createAndSaveTags(this.newTags).subscribe({
         next: (tagsSavedToDatabase) => {
           const videoTags: Tag[] = [
             ...this.selectedTags.filter(tag => tag.tagID),
@@ -203,28 +201,27 @@ export class VideoEditorComponent implements OnInit {
         },
 
         error: (error) => {
-          error();
+          errorFn();
         }
       });
     }
   }
 
-  private saveVideo(success: Function, error: Function) {
+  private saveVideo(success: Function, errorFn: Function) {
     this.isSaving = true;
 
     this.videoService.createVideo(this.video).subscribe(
       {
         complete: () => success(),
         error: (error) => {
-          this.setError("There was an error saving the video, please try again later.")
-          this.isSaving = false;
+          errorFn();
         }
       }
     );
   }
 
-  finishEditing(): void {
-    this.savedVideoEvent.emit("Saved video");
+  public finishEditing(message: string): void {
+    this.savedVideoEvent.emit(message);
   }
 
   private setError(error: string): void {

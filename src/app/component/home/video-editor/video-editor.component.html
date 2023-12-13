@@ -1,10 +1,10 @@
 <div class="editor-window">
-  <button mat-icon-button aria-label="Close">
+  <button mat-icon-button aria-label="Close" (click)="finishEditing('Closed editor')">
     <mat-icon>close</mat-icon>
   </button>
   <div class="inner-editor-window">
     <mat-form-field class="input-field" (keyup.enter)="processYoutubeUrl()">
-      <mat-label>Youtube URL</mat-label>
+      <mat-label>Paste youtube video link here</mat-label>
       <input matInput [(ngModel)]="videoUrl">
     </mat-form-field>
 
@@ -23,7 +23,7 @@
 
 
       <mat-form-field class="input-field">
-        <mat-label>Select your tags, or a type a name and press enter to create a new one</mat-label>
+        <mat-label>Select your tags, or type a name and press enter to create a new one</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tag selection">
           <mat-chip-row *ngFor="let tag of selectedTags" (removed)="removeTag(tag)">
             {{tag.text}}
@@ -32,7 +32,7 @@
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input #tagInput [formControl]="tagCtrl"
+        <input #tagInput [formControl]="tagInputElement" placeholder="Enter tags..."
                #tagInputTooltip="matTooltip"
                [matTooltip]="tagInputTooltipText"
                matTooltipPosition="above"
@@ -40,12 +40,12 @@
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                (matChipInputTokenEnd)="addTag($event)"/>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event.option.value)">
-          <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+          <mat-option *ngFor="let tag of autocompleteTags | async" [value]="tag">
             {{tag.text}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <button (click)="saveAll()" *ngIf="isSaving == false" class="bottom-right" mat-flat-button color="primary">Save</button>
+      <button (click)="saveAll()" *ngIf="isSaving == false" class="bottom-right" mat-flat-button color="primary">Save video</button>
       <mat-spinner class="bottom-right" [diameter]="30" *ngIf="isSaving"></mat-spinner>
     </form>
     <mat-error>{{error}}</mat-error>

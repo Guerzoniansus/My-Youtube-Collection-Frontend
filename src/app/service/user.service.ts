@@ -9,18 +9,34 @@ import {HttpHeaders} from "@angular/common/http";
 })
 export class UserService {
 
-  private userSubject: BehaviorSubject<User|undefined> = new BehaviorSubject<User|undefined>(undefined);
-  private user: Observable<User|undefined> = this.userSubject.asObservable();
+  private user$: BehaviorSubject<User|undefined> = new BehaviorSubject<User|undefined>(undefined);
 
   constructor() {
     this.initFromLocalStorage();
   }
 
   /**
+   * Gets the current user.
+   * @private
+   */
+  private get user(): User | undefined {
+    return this.user$.value;
+  }
+
+  /**
+   * Sets a new user.
+   * @param user The user to set.
+   * @private
+   */
+  private set user(user: User | undefined) {
+    this.user$.next(user);
+  }
+
+  /**
    * Returns an Observable User object that can be subscribed to.
    */
   public getUser(): Observable<User | undefined> {
-    return this.user;
+    return this.user$.asObservable();
   }
 
   /**
@@ -29,7 +45,7 @@ export class UserService {
    */
   public login(jwt: string): void {
     localStorage.setItem("jwt", jwt);
-    this.userSubject.next(this.createUser());
+    this.user = this.createUser();
   }
 
   /**
@@ -37,23 +53,31 @@ export class UserService {
    */
   public logout(): void {
     localStorage.removeItem("jwt");
-    this.userSubject.next(undefined);
+    this.user = undefined;
   }
 
   /**
    * Checks whether the user is currently logged in or not.
    */
   public isLoggedIn() {
-    return this.userSubject.value != undefined;
+    return this.user != undefined;
+  }
+
+  /**
+   * Creates a HTTP option for requests. It includes a header for authorization.
+   */
+  public createHttpOptionsWithAuthHeader(): {headers: HttpHeaders} {
+    return {headers: this.getAuthorizationHeader()};
   }
 
   /**
    * Creates a HTTP option that includes the JWT token for authentication.
    */
   public getAuthorizationHeader(): HttpHeaders {
+    const jwt = this.getJwt();
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + this.getJwt()
+      'Authorization': "Bearer " + jwt
     });
   }
 
@@ -87,7 +111,7 @@ export class UserService {
    */
   private initFromLocalStorage(): void {
     if (this.hasJwt()) {
-      this.userSubject.next(this.createUser());
+      this.user = this.createUser();
     }
   }
 

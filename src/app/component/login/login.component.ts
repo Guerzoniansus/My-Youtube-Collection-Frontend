@@ -1,18 +1,16 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SocialAuthService} from "@abacritt/angularx-social-login";
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import jwtDecode from "jwt-decode";
 import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
-
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   private loginUrl: string = environment.backendUrl + "/login"
 
@@ -42,7 +40,7 @@ export class LoginComponent {
         this.error = "";
         this.userService.login(jwt);
         this.connectingToBackend = false;
-        this.router.navigate(["home"]);
+        this.router.navigate(["home"]).then(() => window.location.reload());
       },
       error: error => {
         this.connectingToBackend = false;

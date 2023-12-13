@@ -1,0 +1,17 @@
+<mat-form-field class="input-field">
+  <!-- Style: display none, because Home Component shows the tags -->
+  <mat-chip-grid #chipGrid style="display: none">
+    <mat-chip-row *ngFor="let tag of selectedTags">
+    </mat-chip-row>
+  </mat-chip-grid>
+
+  <input #tagInputElement [formControl]="tagInput" placeholder="🔎 Search by title, channel or tags"
+         [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+         (matChipInputTokenEnd)="pressedEnter($event.value)"/>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event.option.value)">
+    <mat-option *ngFor="let tag of autocompleteTags | async" [value]="tag">
+      {{tag.text}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

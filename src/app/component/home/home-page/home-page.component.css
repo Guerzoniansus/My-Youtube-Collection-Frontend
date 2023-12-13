@@ -15,10 +15,11 @@
 }
 
 .videos-container {
+  margin-left: 20px;
   display: flex;
   flex-direction: row;
   justify-content: left;
   align-content: space-between;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 30px;
 }
