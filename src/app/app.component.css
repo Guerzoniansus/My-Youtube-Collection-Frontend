@@ -1,0 +1,19 @@
+@media only screen and (min-width: 1000px) {
+  /* For large screens: */
+  .content-margin {
+    display: block;
+    margin-top: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+  }
+}
+
+@media screen and (max-width: 999px){
+  .content-margin {
+    display: block;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+

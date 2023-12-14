@@ -1,0 +1,9 @@
+<div class="center">
+  <div style="width: 400px">
+    <p>My Youtube Collection allows you to create a personal library of your favorite videos
+      and organise them via self-created tags. Please login to start using this site:</p>
+    <asl-google-signin-button *ngIf="connectingToBackend == false" type='standard' size='large'></asl-google-signin-button>
+    <mat-spinner *ngIf="connectingToBackend"></mat-spinner>
+    <mat-error>{{error}}</mat-error>
+  </div>
+</div>
