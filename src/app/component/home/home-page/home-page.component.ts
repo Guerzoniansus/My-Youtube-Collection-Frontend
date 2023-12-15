@@ -52,7 +52,7 @@ export class HomePageComponent implements OnInit {
     this.creatingVideo = false;
     this.videoBeingEdited = undefined;
 
-    if (message.includes("Saved") || message.includes("Deleted")) {
+    if (message.includes("Saved") || message.includes("Deleted") || message.includes("Updated")) {
       this.videoService.refreshVideos();
     }
   }

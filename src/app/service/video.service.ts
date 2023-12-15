@@ -19,6 +19,7 @@ export class VideoService {
   private URL: string = environment.backendUrl + "/videos";
   private CREATE_URL: string = this.URL + "/create"
   private DELETE_URL = (videoID: number) => this.URL + "/" + videoID;
+  private UPDATE_URL = (videoID: number) => this.URL + "/" + videoID;
 
   private searchFilter?: SearchFilter;
 
@@ -68,5 +69,13 @@ export class VideoService {
    */
   public deleteVideo(video: Video) {
     return this.http.delete<any>(this.DELETE_URL(video.videoID!), this.userService.createHttpOptionsWithAuthHeader());
+  }
+
+  /**
+   * Updates a video.
+   * @param video The video to update.
+   */
+  updateVideo(video: Video) {
+    return this.http.put<any>(this.UPDATE_URL(video.videoID!), video, this.userService.createHttpOptionsWithAuthHeader());
   }
 }

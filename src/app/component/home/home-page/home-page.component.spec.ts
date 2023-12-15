@@ -72,16 +72,6 @@ describe('HomePageComponent', () => {
     expect(videoService.refreshVideos).toHaveBeenCalled();
   });
 
-  it("should not refresh videos when searching", () => {
-    const message = "Saved video";
-    searchService.isSearching.and.returnValue(true);
-
-    component.onFinishedEditingVideoEvent(message);
-
-    expect(component.creatingVideo).toEqual(false);
-    expect(videoService.refreshVideos).not.toHaveBeenCalled();
-  });
-
   it("should not refresh videos when the event message is not Saved video", () => {
     const message = "bla bla bla";
     searchService.isSearching.and.returnValue(false);

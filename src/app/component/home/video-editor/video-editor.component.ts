@@ -211,13 +211,19 @@ export class VideoEditorComponent implements OnInit {
     );
   }
 
+  /**
+   * Saves the tags of the video.
+   * @param success The function to execute when the request to the backend is successful.
+   * @param errorFn The function to execute when the request to the backend has an error.
+   * @private
+   */
   private saveTags(success: Function, errorFn: Function) {
     if (this.newTags.length == 0) {
       this.video.tags = this.selectedTags;
       success();
     }
 
-    // Save new tags to database and add them to video so we don't send tags without IDs
+    // Save new tags to database and add them to video, so we don't send tags without IDs
     else {
       this.tagService.createAndSaveTags(this.newTags).subscribe({
         next: (tagsSavedToDatabase) => {
@@ -236,10 +242,18 @@ export class VideoEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Saves a new video or updates an existing video.
+   * @param success The function to execute when the request to the backend is successful.
+   * @param errorFn The function to execute when the request to the backend has an error.
+   * @private
+   */
   private saveVideo(success: Function, errorFn: Function) {
-    this.isLoading = true;
+    const request = this.isEditingExistingVideo
+      ? this.videoService.updateVideo(this.video)
+      : this.videoService.createVideo(this.video);
 
-    this.videoService.createVideo(this.video).subscribe(
+    request.subscribe(
       {
         complete: () => success(),
         error: (error) => {
