@@ -10,6 +10,7 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {YoutubeService} from "../../../service/youtube.service";
 import {VideoService} from "../../../service/video.service";
 import {MatTooltip} from "@angular/material/tooltip";
+import {removeElementFromArray} from "../../../utils/RemoveElementFromArray";
 
 @Component({
   selector: 'app-video-editor',
@@ -28,7 +29,8 @@ export class VideoEditorComponent implements OnInit {
   @ViewChild('tagInputTooltip') tagInputTooltip!: MatTooltip;
   public tagInputTooltipText: string = "";
 
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
+  /** The key used for detecting when a tag has been entered */
+  public separatorKeysCodes: number[] = [ENTER];
 
   /** Input field */
   public tagInputElement = new FormControl();
@@ -38,7 +40,7 @@ export class VideoEditorComponent implements OnInit {
 
   public video: Video = {
     videoID: undefined,
-    videoCode: "b-9sQsGEhEw",
+    videoCode: "",
     title: "",
     channel: "",
     alternativeTitle: "",
@@ -81,26 +83,34 @@ export class VideoEditorComponent implements OnInit {
    * Event that gets fired when a tag gets typed and enter gets pressed.
    * @param event
    */
-  public addTag(event: MatChipInputEvent): void {
+  public pressEnterOnTag(event: MatChipInputEvent): void {
     const tagText = event.value.trim();
 
     if (tagText && (!this.isTagAlreadySelected(tagText))) {
-      const newTag: Tag = {
-        tagID: undefined,
-        text: this.sanitizeTagText(tagText.trim())
-      };
+      const userTag = this.getUserTag(tagText);
 
-      this.selectedTags!.push(newTag);
-      this.newTags.push(newTag);
+      if (userTag != undefined) {
+        this.selectedTag(userTag);
+      }
 
-      event.chipInput!.clear();
-      this.tagInputElement.setValue(null);
+      else {
+        const newTag: Tag = {
+          tagID: undefined,
+          text: this.sanitizeTagText(tagText.trim())
+        };
+
+        this.selectedTags!.push(newTag);
+        this.newTags.push(newTag);
+
+        event.chipInput!.clear();
+        this.tagInputElement.setValue(null);
+      }
     }
   }
 
   /**
-   * Event that gets fired when a tag gets clicked in autocomplete
-   * @param tag
+   * Event that gets fired when a tag gets clicked in autocomplete.
+   * @param tag The tag that got selected.
    */
   public selectedTag(tag: Tag): void {
     this.selectedTags!.push(tag);
@@ -109,32 +119,42 @@ export class VideoEditorComponent implements OnInit {
     this.autocompleteTags = of([]); // Without this, user can select the same tag again
   }
 
+  /**
+   * Event that gets fired when the user presses X next to a tag.
+   * @param tag The tag that gets removed.
+   */
   public removeTag(tag: Tag): void {
-    const index = this.selectedTags!.indexOf(tag);
-
-    if (index >= 0) {
-      this.selectedTags!.splice(index, 1); // Removes element from array
-    }
-
-    const indexNewTags = this.newTags.indexOf(tag);
-
-    if (indexNewTags >= 0) {
-      this.newTags.splice(index, 1); // Removes element from array
-    }
+    this.selectedTags = removeElementFromArray(tag, this.selectedTags);
+    this.newTags = removeElementFromArray(tag, this.newTags);
   }
 
+  /**
+   * Makes it so a tag text starts with an uppercase letter and the rest is lower case.
+   * @param text
+   */
   public sanitizeTagText(text: string): string {
     return text[0].toUpperCase() + text.slice(1).toLowerCase();
   }
 
   /**
-   * Checks if a tag has already been selected
-   * @param tagText The text of the tag
+   * Checks if a tag has already been selected. Compares lowercase versions of text.
+   * @param tagText The text of the tag.
    */
   public isTagAlreadySelected(tagText: string): boolean {
     return this.selectedTags!.map(tag => tag.text.toLowerCase()).includes(tagText.toLowerCase());
   }
 
+  /**
+   * Gets a user tag. If the tag does not exist in user tags, this will return undefined.
+   * @param tagText The text of the tag that you want to find.
+   */
+  public getUserTag(tagText: string): Tag | undefined {
+    return this.userTags.find((tag) => tag.text.toLowerCase() == tagText.toLowerCase());
+  }
+
+  /**
+   * Process the Youtube URL. If it's a valid URL, it will display the editor.
+   */
   public processYoutubeUrl() {
     const code = this.yt.extractCodeFromUrl(this.videoUrl);
 
