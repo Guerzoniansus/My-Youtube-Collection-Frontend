@@ -11,6 +11,8 @@ import {YoutubeService} from "../../../service/youtube.service";
 import {VideoService} from "../../../service/video.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {removeElementFromArray} from "../../../utils/RemoveElementFromArray";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmationWindowComponent} from "../../confirmation-window/confirmation-window.component";
 
 @Component({
   selector: 'app-video-editor',
@@ -19,12 +21,14 @@ import {removeElementFromArray} from "../../../utils/RemoveElementFromArray";
 })
 export class VideoEditorComponent implements OnInit {
 
+  public isEditingExistingVideo: boolean = false;
+
   @Output() savedVideoEvent = new EventEmitter<string>();
 
   public videoUrl: string = "";
   public validUrl: boolean = false;
   public error: string = "";
-  public isSaving: boolean = false;
+  public isLoading: boolean = false;
 
   @ViewChild('tagInputTooltip') tagInputTooltip!: MatTooltip;
   public tagInputTooltipText: string = "";
@@ -59,7 +63,7 @@ export class VideoEditorComponent implements OnInit {
   /** The selected tags shown in frontend. */
   public selectedTags: Tag[] = [];
 
-  constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService) {
+  constructor(private tagService: TagService, private videoService: VideoService, private yt: YoutubeService, public dialog: MatDialog) {
     this.tagInputElement.valueChanges.subscribe(input => {
       const filteredTags: Tag[] = this.userTags.filter(tag =>
         tag.text.toLowerCase().includes(input.toLowerCase()))
@@ -178,7 +182,7 @@ export class VideoEditorComponent implements OnInit {
   }
 
   public saveAll() {
-    this.isSaving = true;
+    this.isLoading = true;
 
     // We save the tags first, then if any tags were new, save and retrieve them from the backend
     // and add them to the video, but now with IDs in them
@@ -187,17 +191,17 @@ export class VideoEditorComponent implements OnInit {
         this.saveVideo(
           () => {
             this.finishEditing("Saved video");
-            this.isSaving = false;
+            this.isLoading = false;
           },
           () => {
             this.setError("There was an error saving the video, please try again later.")
-            this.isSaving = false;
+            this.isLoading = false;
           }
         )
       },
       () => {
         this.setError("There was an error saving the tags, please try again later.");
-        this.isSaving = false;
+        this.isLoading = false;
       }
     );
   }
@@ -228,7 +232,7 @@ export class VideoEditorComponent implements OnInit {
   }
 
   private saveVideo(success: Function, errorFn: Function) {
-    this.isSaving = true;
+    this.isLoading = true;
 
     this.videoService.createVideo(this.video).subscribe(
       {
@@ -246,5 +250,31 @@ export class VideoEditorComponent implements OnInit {
 
   private setError(error: string): void {
     this.error = error;
+  }
+
+  public deleteVideo(video: Video): void {
+    alert("yo");
+  }
+
+  /**
+   * Opens the confirmation dialogue.
+   * @param confirmFunction The function to execute when the user presses confirm.
+   * @private
+   */
+  public openConfirmationDialog(confirmFunction: Function = () => {this.deleteVideo(this.video)}): void {
+    const dialogRef = this.dialog.open(ConfirmationWindowComponent, {
+      data: {
+        text: 'Are you sure you want to delete this video?',
+        confirmationText: 'Delete',
+        confirmationIcon: 'delete',
+        confirmationColor: 'warn'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        confirmFunction();
+      }
+    });
   }
 }

@@ -28,3 +28,7 @@
   float: right;
   margin-bottom: 10px;
 }
+
+.delete-button {
+  float: right;
+}

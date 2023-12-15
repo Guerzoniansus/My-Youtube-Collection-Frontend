@@ -1,6 +1,10 @@
 <div class="editor-window">
-  <button mat-icon-button aria-label="Close" (click)="finishEditing('Closed editor')">
+  <button mat-icon-button aria-label="Close" title="Close window" (click)="finishEditing('Closed editor')">
     <mat-icon>close</mat-icon>
+  </button>
+  <button mat-icon-button class="delete-button" aria-label="Delete" color="warn" title="Delete video"
+          (click)="openConfirmationDialog()">
+    <mat-icon>delete</mat-icon>
   </button>
   <div class="inner-editor-window">
     <mat-form-field *ngIf="validUrl == false" class="input-field" (keyup.enter)="processYoutubeUrl()">
@@ -45,10 +49,10 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <button (click)="saveAll()" *ngIf="isSaving == false" class="bottom-right" mat-flat-button color="primary">
+      <button (click)="saveAll()" *ngIf="isLoading == false" class="bottom-right" mat-flat-button color="primary">
         <mat-icon>check</mat-icon>
         Save video</button>
-      <mat-spinner class="bottom-right" [diameter]="30" *ngIf="isSaving"></mat-spinner>
+      <mat-spinner class="bottom-right" [diameter]="30" *ngIf="isLoading"></mat-spinner>
     </form>
     <mat-error>{{error}}</mat-error>
   </div>
