@@ -3,7 +3,7 @@
     <mat-icon>close</mat-icon>
   </button>
   <div class="inner-editor-window">
-    <mat-form-field class="input-field" (keyup.enter)="processYoutubeUrl()">
+    <mat-form-field *ngIf="validUrl == false" class="input-field" (keyup.enter)="processYoutubeUrl()">
       <mat-label>Paste youtube video link here</mat-label>
       <input matInput [(ngModel)]="videoUrl">
     </mat-form-field>
