@@ -15,10 +15,12 @@ import {PageEvent} from "@angular/material/paginator";
 })
 export class HomePageComponent implements OnInit {
 
-  public editingVideo: boolean = false;
+  public creatingVideo: boolean = false;
   public videos: Video[] = [];
   public error: string = "";
   public filter!: SearchFilter;
+
+  public videoBeingEdited: Video | undefined;
 
   constructor(private userService: UserService, private router: Router,
               private searchService: SearchService, private videoService: VideoService) {}
@@ -39,7 +41,7 @@ export class HomePageComponent implements OnInit {
 
   /** Event that gets fired when the user clicks on the add video button. */
   public addVideo() {
-    this.editingVideo = true;
+    this.creatingVideo = true;
   }
 
   /**
@@ -47,10 +49,23 @@ export class HomePageComponent implements OnInit {
    * @param message The event message.
    */
   public onFinishedEditingVideoEvent(message: string) {
-    this.editingVideo = false;
+    this.creatingVideo = false;
+    this.videoBeingEdited = undefined;
 
-    if (message == "Saved video" && this.searchService.isSearching() == false) {
+    if (message.includes("Saved") || message.includes("Deleted")) {
       this.videoService.refreshVideos();
     }
+  }
+
+  public editVideoClickEvent(video: Video) {
+    this.videoBeingEdited = video;
+  }
+
+  /**
+   * Function to close the video editor.
+   */
+  public closeEditor() {
+    this.creatingVideo = false;
+    this.videoBeingEdited = undefined;
   }
 }

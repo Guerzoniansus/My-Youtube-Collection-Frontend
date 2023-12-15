@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {TagService} from "../../../service/tag.service";
 import {Video} from "../../../model/Video";
 import {Tag} from "../../../model/Tag";
@@ -13,6 +13,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {removeElementFromArray} from "../../../utils/RemoveElementFromArray";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmationWindowComponent} from "../../confirmation-window/confirmation-window.component";
+import {tick} from "@angular/core/testing";
 
 @Component({
   selector: 'app-video-editor',
@@ -21,9 +22,9 @@ import {ConfirmationWindowComponent} from "../../confirmation-window/confirmatio
 })
 export class VideoEditorComponent implements OnInit {
 
-  public isEditingExistingVideo: boolean = false;
+  @Input() public isEditingExistingVideo: boolean = false;
 
-  @Output() savedVideoEvent = new EventEmitter<string>();
+  @Output() finishedEditingEvent = new EventEmitter<string>();
 
   public videoUrl: string = "";
   public validUrl: boolean = false;
@@ -42,7 +43,7 @@ export class VideoEditorComponent implements OnInit {
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
   @ViewChild('videoEmbed') videoEmbed!: ElementRef;
 
-  public video: Video = {
+  @Input() public video: Video = {
     videoID: undefined,
     videoCode: "",
     title: "",
@@ -81,6 +82,12 @@ export class VideoEditorComponent implements OnInit {
 
   ngOnInit() {
     this.tagService.getTags().subscribe(tags => this.userTags = tags);
+
+    if (this.isEditingExistingVideo) {
+      this.selectedTags = this.video.tags!;
+      // Without a delay there will be a weird bug where the HTML will be completely broken
+      setTimeout(() => this.embedYoutubeVideo(this.video), 100);
+    }
   }
 
   /**
@@ -169,9 +176,7 @@ export class VideoEditorComponent implements OnInit {
           this.video.title = data.items[0].snippet.title;
           this.video.channel = data.items[0].snippet.channelTitle;
           this.video.videoCode = code;
-          this.videoEmbed.nativeElement.innerHTML = (`<iframe width="368" height="207" src="https://www.youtube.com/embed/${this.video.videoCode}"
-              title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-        </iframe>`)
+          this.embedYoutubeVideo(this.video);
           this.validUrl = true;
           this.setError("");
         }
@@ -244,16 +249,53 @@ export class VideoEditorComponent implements OnInit {
     );
   }
 
+  /**
+   * Fires off an event to the parent that this window is ready to close.
+   * @param message The event that caused editing to finish. Can be "Deleted video", "Exited editor", "Saved video" or "Edited video".
+   */
   public finishEditing(message: string): void {
-    this.savedVideoEvent.emit(message);
+    this.finishedEditingEvent.emit(message);
   }
 
+  /**
+   * Sets the error message in the HTML.
+   * @param error The error to show.
+   * @private
+   */
   private setError(error: string): void {
     this.error = error;
   }
 
+  /**
+   * Deletes a video.
+   * @param video The video to delete.
+   */
   public deleteVideo(video: Video): void {
-    alert("yo");
+    this.isLoading = true;
+
+    this.videoService.deleteVideo(video).subscribe(
+      {
+        next: () => {
+          this.finishEditing("Deleted video");
+          this.isLoading = false;
+        },
+        error: () => {
+          this.setError("Could not delete the video");
+          this.isLoading = false;
+        }
+      }
+    )
+  }
+
+  /**
+   * Embeds the youtube video into the #videoEmbed element.
+   * @param video The video to embed.
+   * @private
+   */
+  private embedYoutubeVideo(video: Video): void {
+    this.videoEmbed.nativeElement.innerHTML = (`<iframe width="368" height="207" src="https://www.youtube.com/embed/${video.videoCode!}"
+              title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+        </iframe>`);
   }
 
   /**

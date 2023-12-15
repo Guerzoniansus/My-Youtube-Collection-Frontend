@@ -57,9 +57,9 @@ describe('HomePageComponent', () => {
   })
 
   it("Should set editing to true", () => {
-    component.editingVideo = false;
+    component.creatingVideo = false;
     component.addVideo();
-    expect(component.editingVideo).toEqual(true);
+    expect(component.creatingVideo).toEqual(true);
   })
 
   it("should handle onFinishedEditingVideoEvent", () => {
@@ -68,7 +68,7 @@ describe('HomePageComponent', () => {
 
     component.onFinishedEditingVideoEvent(message);
 
-    expect(component.editingVideo).toEqual(false);
+    expect(component.creatingVideo).toEqual(false);
     expect(videoService.refreshVideos).toHaveBeenCalled();
   });
 
@@ -78,7 +78,7 @@ describe('HomePageComponent', () => {
 
     component.onFinishedEditingVideoEvent(message);
 
-    expect(component.editingVideo).toEqual(false);
+    expect(component.creatingVideo).toEqual(false);
     expect(videoService.refreshVideos).not.toHaveBeenCalled();
   });
 
@@ -88,7 +88,7 @@ describe('HomePageComponent', () => {
 
     component.onFinishedEditingVideoEvent(message);
 
-    expect(component.editingVideo).toEqual(false);
+    expect(component.creatingVideo).toEqual(false);
     expect(videoService.refreshVideos).not.toHaveBeenCalled();
   });
 });
