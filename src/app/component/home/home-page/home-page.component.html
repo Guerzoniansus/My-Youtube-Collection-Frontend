@@ -5,7 +5,7 @@
     <app-video-editor (savedVideoEvent)="onFinishedEditingVideoEvent($event)" *ngIf="editingVideo"></app-video-editor>
   </div>
 
-  <button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video">
+  <button (click)="addVideo()" class="float" mat-fab color="primary" aria-label="Add video" title="Add new video">
     <mat-icon>add</mat-icon>
   </button>
 
