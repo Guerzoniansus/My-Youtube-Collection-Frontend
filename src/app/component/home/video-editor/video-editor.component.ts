@@ -88,6 +88,16 @@ export class VideoEditorComponent implements OnInit {
       // Without a delay there will be a weird bug where the HTML will be completely broken
       setTimeout(() => this.embedYoutubeVideo(this.video), 100);
     }
+
+    // Read URL from clipboard
+    else {
+      navigator.clipboard.readText().then(text => {
+        if (this.yt.extractCodeFromUrl(text) != undefined) {
+          this.videoUrl = text;
+          this.processYoutubeUrl();
+        }
+      });
+    }
   }
 
   /**

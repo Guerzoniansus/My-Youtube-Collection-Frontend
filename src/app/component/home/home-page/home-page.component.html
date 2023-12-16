@@ -2,7 +2,7 @@
   <app-search-info></app-search-info>
 
   <div>
-    <app-video-editor *ngIf="creatingVideo" (finishedEditingEvent)="onFinishedEditingVideoEvent($event)" ></app-video-editor>
+    <app-video-editor *ngIf="isCreatingVideo" (finishedEditingEvent)="onFinishedEditingVideoEvent($event)" ></app-video-editor>
     <app-video-editor *ngIf="videoBeingEdited != undefined" [isEditingExistingVideo]="true"
                       [video]="videoBeingEdited!" (finishedEditingEvent)="onFinishedEditingVideoEvent($event)"></app-video-editor>
   </div>
@@ -21,7 +21,7 @@
 
   <app-pagination></app-pagination>
 
-  <div class="overlay" *ngIf="creatingVideo || videoBeingEdited != undefined" (click)="closeEditor()">
+  <div class="overlay" *ngIf="isCreatingVideo || videoBeingEdited != undefined" (click)="closeEditor()">
   </div>
 
 </div>
