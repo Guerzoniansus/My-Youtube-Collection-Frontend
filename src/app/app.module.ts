@@ -29,6 +29,7 @@ import { SearchInfoComponent } from './component/home/search-info/search-info.co
 import { PaginationComponent } from './component/home/pagination/pagination.component';
 import { ConfirmationWindowComponent } from './component/confirmation-window/confirmation-window.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {MatDialogModule} from "@angular/material/dialog";
     MatTooltipModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
