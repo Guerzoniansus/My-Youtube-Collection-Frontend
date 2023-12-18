@@ -27,6 +27,9 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {AlphabeticalPipe} from "./utils/AlphabeticalPipe";
 import { SearchInfoComponent } from './component/home/search-info/search-info.component';
 import { PaginationComponent } from './component/home/pagination/pagination.component';
+import { ConfirmationWindowComponent } from './component/confirmation-window/confirmation-window.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -39,27 +42,30 @@ import { PaginationComponent } from './component/home/pagination/pagination.comp
     SearchBarComponent,
     AlphabeticalPipe,
     SearchInfoComponent,
-    PaginationComponent
+    PaginationComponent,
+    ConfirmationWindowComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatMenuModule,
-        HttpClientModule,
-        AppRoutingModule,
-        GoogleSigninButtonModule,
-        MatInputModule,
-        MatProgressSpinnerModule,
-        MatAutocompleteModule,
-        MatChipsModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MatTooltipModule,
-        MatPaginatorModule,
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    HttpClientModule,
+    AppRoutingModule,
+    GoogleSigninButtonModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatTooltipModule,
+    MatPaginatorModule,
+    MatDialogModule,
+    MatSnackBarModule
+  ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {

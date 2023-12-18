@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Confirmation</h2>
+<mat-dialog-content>
+  <p>{{ text }}</p>
+</mat-dialog-content>
+<mat-dialog-actions class="dialogue-buttons">
+  <button mat-button (click)="dialogRef.close(false)">
+    <mat-icon>cancel</mat-icon>
+    {{ cancelText }}</button>
+  <button mat-raised-button (click)="dialogRef.close(true)" [color]="confirmationColor">
+    <mat-icon *ngIf="confirmationIcon">{{ confirmationIcon }}</mat-icon>
+    {{ confirmationText }}
+  </button>
+</mat-dialog-actions>

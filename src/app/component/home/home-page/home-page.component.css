@@ -2,6 +2,7 @@
   position:fixed;
   bottom:100px;
   right:100px;
+  z-index: 700;
 }
 
 .overlay {
@@ -22,4 +23,9 @@
   align-content: space-between;
   flex-wrap: wrap;
   gap: 30px;
+}
+
+.video:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
 }
