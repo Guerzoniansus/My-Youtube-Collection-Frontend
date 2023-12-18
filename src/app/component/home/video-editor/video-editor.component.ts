@@ -35,7 +35,7 @@ export class VideoEditorComponent implements OnInit {
   public tagInputTooltipText: string = "";
 
   /** The key used for detecting when a tag has been entered */
-  public separatorKeysCodes: number[] = [ENTER];
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   /** Input field */
   public tagInputElement = new FormControl();
