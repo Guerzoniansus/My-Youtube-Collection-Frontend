@@ -18,6 +18,8 @@ export class VideoService {
 
   private URL: string = environment.backendUrl + "/videos";
   private CREATE_URL: string = this.URL + "/create"
+  private DELETE_URL = (videoID: number) => this.URL + "/" + videoID;
+  private UPDATE_URL = (videoID: number) => this.URL + "/" + videoID;
 
   private searchFilter?: SearchFilter;
 
@@ -53,7 +55,27 @@ export class VideoService {
     });
   }
 
+  /**
+   * Creates a new video in the database.
+   * @param video The video to create.
+   */
   public createVideo(video: Video): Observable<any> {
     return this.http.post<Video>(this.CREATE_URL, video, this.userService.createHttpOptionsWithAuthHeader());
+  }
+
+  /**
+   * Deletes a video.
+   * @param video The video to delete.
+   */
+  public deleteVideo(video: Video) {
+    return this.http.delete<any>(this.DELETE_URL(video.videoID!), this.userService.createHttpOptionsWithAuthHeader());
+  }
+
+  /**
+   * Updates a video.
+   * @param video The video to update.
+   */
+  updateVideo(video: Video) {
+    return this.http.put<any>(this.UPDATE_URL(video.videoID!), video, this.userService.createHttpOptionsWithAuthHeader());
   }
 }

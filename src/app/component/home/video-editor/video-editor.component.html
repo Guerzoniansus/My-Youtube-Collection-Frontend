@@ -1,16 +1,21 @@
 <div class="editor-window">
-  <button mat-icon-button aria-label="Close" (click)="finishEditing('Closed editor')">
+  <button mat-icon-button aria-label="Close" title="Close window" (click)="finishEditing('Closed editor')">
     <mat-icon>close</mat-icon>
   </button>
+  <button *ngIf="isEditingExistingVideo" mat-icon-button class="delete-button" aria-label="Delete" color="warn" title="Delete video"
+          (click)="openConfirmationDialog()">
+    <mat-icon>delete</mat-icon>
+  </button>
   <div class="inner-editor-window">
-    <mat-form-field class="input-field" (keyup.enter)="processYoutubeUrl()">
+    <mat-form-field *ngIf="validUrl == false && isEditingExistingVideo == false"
+                    class="input-field" (keyup.enter)="processYoutubeUrl()">
       <mat-label>Paste youtube video link here</mat-label>
       <input matInput [(ngModel)]="videoUrl">
     </mat-form-field>
 
     <div #videoEmbed></div>
 
-    <form *ngIf="validUrl">
+    <form *ngIf="validUrl || isEditingExistingVideo">
       <p class="input-label">Title</p>
       <p>{{video.title}}</p>
 
@@ -38,15 +43,17 @@
                matTooltipPosition="above"
                [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               (matChipInputTokenEnd)="addTag($event)"/>
+               (matChipInputTokenEnd)="pressEnterOnTag($event)"/>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event.option.value)">
           <mat-option *ngFor="let tag of autocompleteTags | async" [value]="tag">
             {{tag.text}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <button (click)="saveAll()" *ngIf="isSaving == false" class="bottom-right" mat-flat-button color="primary">Save video</button>
-      <mat-spinner class="bottom-right" [diameter]="30" *ngIf="isSaving"></mat-spinner>
+      <button (click)="saveAll()" *ngIf="isLoading == false" class="bottom-right" mat-flat-button color="primary">
+        <mat-icon>check</mat-icon>
+        Save video</button>
+      <mat-spinner class="bottom-right" [diameter]="30" *ngIf="isLoading"></mat-spinner>
     </form>
     <mat-error>{{error}}</mat-error>
   </div>

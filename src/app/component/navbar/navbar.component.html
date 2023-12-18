@@ -7,5 +7,5 @@
     <button *ngIf="userService.isLoggedIn()" (click)="logout()" mat-menu-item>Logout</button>
   </mat-menu>
   <span (click)="onHomeButtonClick()" class="home-button hide-on-phone">My Youtube Collection</span>
-  <app-search-bar *ngIf="isHomePage"></app-search-bar>
+  <app-search-bar *ngIf="isHomePage()"></app-search-bar>
 </mat-toolbar>

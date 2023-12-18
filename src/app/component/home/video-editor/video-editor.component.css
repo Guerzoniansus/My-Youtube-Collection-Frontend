@@ -1,6 +1,5 @@
 .editor-window {
   width: 700px;
-  min-height: 700px;
   position: absolute;
   z-index: 999;
   top: 50%;
@@ -28,4 +27,8 @@
 .bottom-right {
   float: right;
   margin-bottom: 10px;
+}
+
+.delete-button {
+  float: right;
 }
