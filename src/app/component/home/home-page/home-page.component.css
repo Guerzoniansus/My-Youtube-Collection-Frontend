@@ -16,13 +16,13 @@
 }
 
 .videos-container {
-  margin-left: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  align-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 350px); /* 350 px needs to be same size as video width in video.component.css */
+  justify-content: space-between;
+}
+
+.video {
+  margin-bottom: 15px;
 }
 
 .video:hover {
